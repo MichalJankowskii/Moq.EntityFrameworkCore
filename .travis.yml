@@ -1,0 +1,11 @@
+language: csharp
+dotnet: 2.0.0
+dist: trusty
+solution: ./src/Moq.EntityFrameworkCore.Helpers.sln
+script:
+  - cd src
+  - dotnet restore
+  - dotnet build --configuration=Release
+  - dotnet test ./Moq.EntityFrameworkCore.Helpers.Tests/Moq.EntityFrameworkCore.Helpers.Tests.csproj
+  - dotnet test ./Moq.EntityFrameworkCore.Helpers.Examples/Moq.EntityFrameworkCore.Helpers.Examples.csproj
+  

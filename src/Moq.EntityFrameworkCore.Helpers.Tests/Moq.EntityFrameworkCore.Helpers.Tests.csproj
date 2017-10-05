@@ -7,8 +7,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
     <PackageReference Include="Moq" Version="4.7.137" />
-    <PackageReference Include="xunit" Version="2.3.0-rc2-build3812" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0-rc2-build3812" />
+    <PackageReference Include="xunit" Version="2.3.0-rc3-build3818" />
+    <PackageReference Include="xunit.runner.console" Version="2.3.0-rc3-build3818" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0-rc3-build3818" />
   </ItemGroup>
 
   <ItemGroup>
