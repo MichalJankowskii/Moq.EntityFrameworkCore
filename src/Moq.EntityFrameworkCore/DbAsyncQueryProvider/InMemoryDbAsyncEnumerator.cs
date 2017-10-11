@@ -1,4 +1,4 @@
-﻿namespace Moq.EntityFrameworkCore.Helpers.DbAsyncQueryProvider
+﻿namespace Moq.EntityFrameworkCore.DbAsyncQueryProvider
 {
     using System.Collections.Generic;
     using System.Threading;

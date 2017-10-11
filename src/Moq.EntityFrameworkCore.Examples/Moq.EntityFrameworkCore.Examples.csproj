@@ -5,15 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="3.51.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
     <PackageReference Include="Moq" Version="4.7.142" />
     <PackageReference Include="xunit" Version="2.3.0" />
-    <PackageReference Include="xunit.runner.console" Version="2.3.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Moq.EntityFrameworkCore.Helpers\Moq.EntityFrameworkCore.Helpers.csproj" />
+    <ProjectReference Include="..\Moq.EntityFrameworkCore\Moq.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
 </Project>

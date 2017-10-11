@@ -1,4 +1,4 @@
-﻿namespace Moq.EntityFrameworkCore.Helpers.Examples.Users.Entities
+﻿namespace Moq.EntityFrameworkCore.Examples.Users.Entities
 {
     using System.Collections.Generic;
 

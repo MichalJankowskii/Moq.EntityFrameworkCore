@@ -1,10 +1,10 @@
-﻿namespace Moq.EntityFrameworkCore.Helpers.Examples.Users
+﻿namespace Moq.EntityFrameworkCore.Examples.Users
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Entities;
     using Microsoft.EntityFrameworkCore;
+    using Moq.EntityFrameworkCore.Examples.Users.Entities;
 
     public class UsersService
     {

@@ -3,8 +3,8 @@
 cd src
 dotnet restore
 dotnet build --configuration=Release
-dotnet test ./Moq.EntityFrameworkCore.Helpers.Tests/Moq.EntityFrameworkCore.Helpers.Tests.csproj
-dotnet test ./Moq.EntityFrameworkCore.Helpers.Examples/Moq.EntityFrameworkCore.Helpers.Examples.csproj
+dotnet test ./Moq.EntityFrameworkCore.Tests/Moq.EntityFrameworkCore.Tests.csproj
+dotnet test ./Moq.EntityFrameworkCore.Examples/Moq.EntityFrameworkCore.Examples.csproj
 cd ..
 
 if "%1"=="Publish" goto publish

@@ -1,8 +1,8 @@
-﻿namespace Moq.EntityFrameworkCore.Helpers.Tests.DbAsyncQueryProvider
+﻿namespace Moq.EntityFrameworkCore.Tests.DbAsyncQueryProvider
 {
     using System.Collections.Generic;
     using System.Threading;
-    using Helpers.DbAsyncQueryProvider;
+    using EntityFrameworkCore.DbAsyncQueryProvider;
     using Xunit;
 
     public class InMemoryDbAsyncEnumeratorTests

@@ -1,11 +1,11 @@
-# Moq.EntityFrameworkCore.Helpers
-[![Build Status](https://travis-ci.org/MichalJankowskii/Moq.EntityFrameworkCore.Helpers.svg?branch=master)](https://travis-ci.org/MichalJankowskii/Moq.EntityFrameworkCore.Helpers)
-[![Downloads](https://img.shields.io/nuget/dt/Moq.EntityFrameworkCore.Helpers.svg)](https://github.com/MichalJankowskii/Moq.EntityFrameworkCore.Helpers)
+# Moq.EntityFrameworkCore
+[![Build Status](https://travis-ci.org/MichalJankowskii/Moq.EntityFrameworkCore.svg?branch=master)](https://travis-ci.org/MichalJankowskii/Moq.EntityFrameworkCore)
+[![Downloads](https://img.shields.io/nuget/dt/Moq.EntityFrameworkCore.svg)](https://github.com/MichalJankowskii/Moq.EntityFrameworkCore)
 
 This library helps you with mocking EntityFramework contexts. Now you will be able to test methods that are using `DbSet<TEntity>` from `DbContext` in effective way.
 ## Installation - NuGet Packages
 ```
-Install-Package Moq.EntityFrameworkCore.Helpers
+Install-Package Moq.EntityFrameworkCore
 ```
 
 ## Usage
@@ -34,4 +34,4 @@ userContextMock.Setup(x => x.Users).Returns(users);
 
 And this is all. You can use your `DbContext` in your tests.
 
-You will find examples of this library in [repository](https://github.com/MichalJankowskii/Moq.EntityFrameworkCore.Helpers/blob/master/src/Moq.EntityFrameworkCore.Helpers.Examples/UsersServiceTest.cs).
+You will find examples of this library in [repository](https://github.com/MichalJankowskii/Moq.EntityFrameworkCore/blob/master/src/Moq.EntityFrameworkCore.Examples/UsersServiceTest.cs).

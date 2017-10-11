@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
-    <id>Moq.EntityFrameworkCore.Helpers</id>
+    <id>Moq.EntityFrameworkCore</id>
     <version>1.0.0.0</version>
     <authors>Michał Jankowski</authors>
-    <licenseUrl>https://github.com/MichalJankowskii/Moq.EntityFrameworkCore.Helpers/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/MichalJankowskii/Moq.EntityFrameworkCore.Helpers</projectUrl>
+    <licenseUrl>https://github.com/MichalJankowskii/Moq.EntityFrameworkCore/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/MichalJankowskii/Moq.EntityFrameworkCore</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Library that provides methods that will help you with mocking Entity Framework Core.</description>
     <summary>Library that provides methods that will help you with mocking Entity Framework Core.</summary>
     <language>en-US</language>
-    <releaseNotes>https://github.com/MichalJankowskii/Moq.EntityFrameworkCore.Helpers/blob/master/Changelog.txt</releaseNotes>
+    <releaseNotes>https://github.com/MichalJankowskii/Moq.EntityFrameworkCore/blob/master/Changelog.txt</releaseNotes>
     <tags>Moq mocking EF EnityFramework DbSet DbContext unit test testing framework assert TDD BDD EntityFrameworkCore EFCore Core</tags>
     <copyright>Copyright 2016 - Michał Jankowski</copyright>
     <dependencies>
@@ -19,7 +19,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\src\Moq.EntityFrameworkCore.Helpers\bin\Release\netstandard2.0\Moq.EntityFrameworkCore.Helpers.dll" target="lib/netstandard2.0" />
-    <file src="..\src\Moq.EntityFrameworkCore.Helpers\bin\Release\netstandard2.0\Moq.EntityFrameworkCore.Helpers.pdb" target="lib/netstandard2.0" />
+    <file src="..\src\Moq.EntityFrameworkCore\bin\Release\netstandard2.0\Moq.EntityFrameworkCore.dll" target="lib/netstandard2.0" />
+    <file src="..\src\Moq.EntityFrameworkCore\bin\Release\netstandard2.0\Moq.EntityFrameworkCore.pdb" target="lib/netstandard2.0" />
   </files>
 </package>
