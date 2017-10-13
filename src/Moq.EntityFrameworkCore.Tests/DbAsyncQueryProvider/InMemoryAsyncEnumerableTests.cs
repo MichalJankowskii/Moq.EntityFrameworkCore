@@ -6,10 +6,10 @@
     using EntityFrameworkCore.DbAsyncQueryProvider;
     using Xunit;
 
-    public class InMemoryAsyncEnumerableTests
+    public static class InMemoryAsyncEnumerableTests
     {
         [Fact]
-        public void Given_InMemoryAsyncEnumerable_When_GetAsyncEnumerator_Then_EnumeratorFromInInnerEnumerableShouldBeUsed()
+        public static void Given_InMemoryAsyncEnumerable_When_GetAsyncEnumerator_Then_EnumeratorFromInInnerEnumerableShouldBeUsed()
         {
             // Arrange
             var enumerableMock = new Mock<IEnumerable<int>>();
@@ -23,7 +23,7 @@
         }
 
         [Fact]
-        public void Given_InMemoryAsyncEnumerable_When_GetEnumerator_Then_EnumeratorFromInInnerEnumerableShouldBeUsed()
+        public static void Given_InMemoryAsyncEnumerable_When_GetEnumerator_Then_EnumeratorFromInInnerEnumerableShouldBeUsed()
         {
             // Arrange
             var enumerableMock = new Mock<IEnumerable<int>>();
@@ -37,7 +37,7 @@
         }
 
         [Fact]
-        public void Given_Enumerable_When_ObjectCreated_Then_ObjectCorrectlyBuild()
+        public static void Given_Enumerable_When_ObjectCreated_Then_ObjectCorrectlyBuild()
         {
             // Arrange
             var enumerableMock = new Mock<IEnumerable<int>>();
@@ -50,7 +50,7 @@
         }
 
         [Fact]
-        public void Given_Expression_When_ObjectCreated_Then_ObjectCorrectlyBuild()
+        public static void Given_Expression_When_ObjectCreated_Then_ObjectCorrectlyBuild()
         {
             // Arrange
             var expressionMock = new Mock<Expression>().Object;
@@ -63,7 +63,7 @@
         }
 
         [Fact]
-        public void Given_Expression_When_ObjectCreated_Then_ProviderIsCorrect()
+        public static void Given_Expression_When_ObjectCreated_Then_ProviderIsCorrect()
         {
             // Arrange
             var expressionMock = new Mock<Expression>().Object;
