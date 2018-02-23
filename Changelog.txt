@@ -3,3 +3,6 @@ Initial release
 
 Version 2.0.0:
 Update nuget packages version
+
+Version 2.0.1:
+Change extension method name to ReturnDbSet

@@ -29,7 +29,7 @@ IList<User> users = ...;
 ```
 3\. Setup `DbSet` propery:
 ```csharp
-userContextMock.Setup(x => x.Users).Returns(users);
+userContextMock.Setup(x => x.Users).ReturnsDbSet(users);
 ```
 
 And this is all. You can use your `DbContext` in your tests.

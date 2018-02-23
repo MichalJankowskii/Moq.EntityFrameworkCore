@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using AutoFixture;
+    using Moq.EntityFrameworkCore;
     using Moq.EntityFrameworkCore.Examples.Users;
     using Moq.EntityFrameworkCore.Examples.Users.Entities;
     using Xunit;
@@ -20,7 +21,7 @@
             users.Add(lockedUser);
 
             var userContextMock = new Mock<UsersContext>();
-            userContextMock.Setup(x => x.Users).Returns(users);
+            userContextMock.Setup(x => x.Users).ReturnsDbSet(users);
 
             var usersService = new UsersService(userContextMock.Object);
 
@@ -40,7 +41,7 @@
             users.Add(lockedUser);
 
             var userContextMock = new Mock<UsersContext>();
-            userContextMock.Setup(x => x.Users).Returns(users);
+            userContextMock.Setup(x => x.Users).ReturnsDbSet(users);
 
             var usersService = new UsersService(userContextMock.Object);
 
