@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using AutoFixture;
     using Moq.EntityFrameworkCore.Examples.Users;
     using Moq.EntityFrameworkCore.Examples.Users.Entities;
-    using Ploeh.AutoFixture;
     using Xunit;
 
     public class UsersServiceTest

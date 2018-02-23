@@ -15,7 +15,7 @@
     <copyright>Copyright 2016 - Michał Jankowski</copyright>
     <dependencies>
       <dependency id="Microsoft.EntityFrameworkCore" version="2.0.0" />
-	  <dependency id="Moq" version="4.7.0" />
+	  <dependency id="Moq" version="4.8.0" />
     </dependencies>
   </metadata>
   <files>
