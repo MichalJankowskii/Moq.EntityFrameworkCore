@@ -10,8 +10,28 @@
     {
         public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities) where T : DbContext where TEntity : class
         {
-            var entitiesAsQueryable = entities.AsQueryable();
             var dbSetMock = new Mock<DbSet<TEntity>>();
+
+            ConfigureMock(dbSetMock, entities);
+
+            return setupResult.Returns(dbSetMock.Object);
+        }
+
+        public static IReturnsResult<T> ReturnsDbQuery<T, TEntity>(this ISetup<T, DbQuery<TEntity>> setupResult, IEnumerable<TEntity> entities) where T : DbContext where TEntity : class
+        {
+            var dbQueryMock = new Mock<DbQuery<TEntity>>();
+
+            ConfigureMock(dbQueryMock, entities);
+
+            return setupResult.Returns(dbQueryMock.Object);
+        }
+
+        /// <summary>
+        /// Configures a Mock for a <see cref="DbSet{TEntity}"/> or a <see cref="DbQuery{TQuery}"/> so that it can be queriable via LINQ
+        /// </summary>
+        private static void ConfigureMock<TEntity>(Mock dbSetMock, IEnumerable<TEntity> entities) where TEntity : class
+        {
+            var entitiesAsQueryable = entities.AsQueryable();
 
             dbSetMock.As<IAsyncEnumerable<TEntity>>()
                .Setup(m => m.GetEnumerator())
@@ -24,8 +44,6 @@
             dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(entitiesAsQueryable.Expression);
             dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(entitiesAsQueryable.ElementType);
             dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(entitiesAsQueryable.GetEnumerator());
-
-            return setupResult.Returns(dbSetMock.Object);
         }
     }
 }
