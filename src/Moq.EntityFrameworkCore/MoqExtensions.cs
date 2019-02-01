@@ -10,7 +10,6 @@
     {
         public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>> dbSetMock = null) where T : DbContext where TEntity : class
         {
-            var entitiesAsQueryable = entities.AsQueryable();
             dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
 
             ConfigureMock(dbSetMock, entities);
@@ -18,9 +17,9 @@
             return setupResult.Returns(dbSetMock.Object);
         }
 
-        public static IReturnsResult<T> ReturnsDbQuery<T, TEntity>(this ISetup<T, DbQuery<TEntity>> setupResult, IEnumerable<TEntity> entities) where T : DbContext where TEntity : class
+        public static IReturnsResult<T> ReturnsDbQuery<T, TEntity>(this ISetup<T, DbQuery<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbQuery<TEntity>> dbQueryMock = null) where T : DbContext where TEntity : class
         {
-            var dbQueryMock = new Mock<DbQuery<TEntity>>();
+            dbQueryMock = dbQueryMock ?? new Mock<DbQuery<TEntity>>();
 
             ConfigureMock(dbQueryMock, entities);
 
