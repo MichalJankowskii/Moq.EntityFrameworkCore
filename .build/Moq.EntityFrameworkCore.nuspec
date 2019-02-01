@@ -14,8 +14,8 @@
     <tags>Moq mocking EF EnityFramework DbSet DbContext unit test testing framework assert TDD BDD EntityFrameworkCore EFCore Core</tags>
     <copyright>Copyright 2016 - Michał Jankowski</copyright>
     <dependencies>
-      <dependency id="Microsoft.EntityFrameworkCore" version="2.0.0" />
-	  <dependency id="Moq" version="4.8.0" />
+      <dependency id="Microsoft.EntityFrameworkCore" version="2.2.1" />
+	  <dependency id="Moq" version="4.10.1" />
     </dependencies>
   </metadata>
   <files>
