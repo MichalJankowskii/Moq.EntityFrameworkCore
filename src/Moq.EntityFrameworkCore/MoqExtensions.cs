@@ -8,9 +8,10 @@
 
     public static class MoqExtensions
     {
-        public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities) where T : DbContext where TEntity : class
+        public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>> dbSetMock = null) where T : DbContext where TEntity : class
         {
-            var dbSetMock = new Mock<DbSet<TEntity>>();
+            var entitiesAsQueryable = entities.AsQueryable();
+            dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
 
             ConfigureMock(dbSetMock, entities);
 
