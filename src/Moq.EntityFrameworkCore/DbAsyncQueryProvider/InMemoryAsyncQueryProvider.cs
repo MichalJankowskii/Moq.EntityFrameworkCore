@@ -11,7 +11,6 @@ namespace Moq.EntityFrameworkCore.DbAsyncQueryProvider
     {
         private readonly IQueryProvider innerQueryProvider;
 
-        #region OldCode
         public InMemoryAsyncQueryProvider(IQueryProvider innerQueryProvider)
         {
             this.innerQueryProvider = innerQueryProvider;
@@ -42,18 +41,9 @@ namespace Moq.EntityFrameworkCore.DbAsyncQueryProvider
             return Task.FromResult(this.Execute(expression));
         }
 
-//        public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
-//        {
-//
-//            return Task.FromResult(this.Execute<TResult>(expression)).ToAsyncEnumerable();
-//        }
-
         public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
             return Execute<TResult>(expression);
         }
-        #endregion
-        
-
     }
 }
