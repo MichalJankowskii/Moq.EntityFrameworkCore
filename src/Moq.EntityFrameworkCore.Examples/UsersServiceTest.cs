@@ -13,6 +13,20 @@
         private static readonly Fixture Fixture = new Fixture();
 
         [Fact]
+        public async Task Corey()
+        {
+            IList<User> users = GenerateNotLockedUsers();
+            var lockedUser = Fixture.Build<User>().With(u => u.Id, 1).Create();
+            users.Add(lockedUser);
+
+            var userContextMock = new Mock<UsersContext>();
+            userContextMock.Setup(x => x.Users).ReturnsDbSet(users);
+            var usersService = new UsersService(userContextMock.Object);
+            var usr = usersService.GetOne(lockedUser.Id);
+            Assert.Equal(lockedUser.Id, usr.Id);
+        }
+        
+        [Fact]
         public void Given_ListOfUsersWithOneUserAccountLock_When_CheckingWhoIsLocked_Then_CorrectLockedUserIsReturned()
         {
             // Arrange
@@ -61,7 +75,7 @@
             roles.Add(disabledRole);
 
             var userContextMock = new Mock<UsersContext>();
-            userContextMock.Setup(x => x.Roles).ReturnsDbQuery(roles);
+            userContextMock.Setup(x => x.Roles).ReturnsDbSet(roles);
 
             var usersService = new UsersService(userContextMock.Object);
 
@@ -81,7 +95,7 @@
             roles.Add(disabledRole);
 
             var userContextMock = new Mock<UsersContext>();
-            userContextMock.Setup(x => x.Roles).ReturnsDbQuery(roles);
+            userContextMock.Setup(x => x.Roles).ReturnsDbSet(roles);
 
             var usersService = new UsersService(userContextMock.Object);
 

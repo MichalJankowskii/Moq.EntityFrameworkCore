@@ -1,4 +1,7 @@
-﻿namespace Moq.EntityFrameworkCore.DbAsyncQueryProvider
+﻿using System.Threading;
+using Microsoft.EntityFrameworkCore;
+
+namespace Moq.EntityFrameworkCore.DbAsyncQueryProvider
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -26,6 +29,11 @@
         public IAsyncEnumerator<T> GetEnumerator()
         {
             return this.GetAsyncEnumerator();
+        }
+
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
+        {
+            return new InMemoryDbAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
         }
     }
 }

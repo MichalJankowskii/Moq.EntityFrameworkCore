@@ -1,4 +1,6 @@
-﻿namespace Moq.EntityFrameworkCore.Examples.Users
+﻿using System.Threading;
+
+namespace Moq.EntityFrameworkCore.Examples.Users
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -15,6 +17,14 @@
             this.usersContext = usersContext;
         }
 
+
+        public async Task<User> GetOne(int userId)
+        {
+            return await this.usersContext.Users
+                .Include(u => u.Roles)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Id == userId, CancellationToken.None);
+        }
         public IList<User> GetLockedUsers()
         {
             return this.usersContext.Users.Where(x => x.AccountLocked).ToList();

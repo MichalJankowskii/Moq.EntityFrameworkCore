@@ -36,20 +36,14 @@
             return this.innerQueryProvider.Execute<TResult>(expression);
         }
 
-        public Task<object> ExecuteAsync(Expression expression, CancellationToken cancellationToken)
+        public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken = new CancellationToken())
         {
-            return Task.FromResult(this.Execute(expression));
+            return this.innerQueryProvider.Execute<TResult>(expression);
         }
 
-        public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
+        public Task<TEntity> ExecuteAsync(Expression expression, CancellationToken cancellationToken)
         {
-
-            return Task.FromResult(this.Execute<TResult>(expression)).ToAsyncEnumerable();
-        }
-
-        public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(this.Execute<TResult>(expression));
+            return Task.FromResult(this.innerQueryProvider.Execute<TEntity>(expression));
         }
     }
 }

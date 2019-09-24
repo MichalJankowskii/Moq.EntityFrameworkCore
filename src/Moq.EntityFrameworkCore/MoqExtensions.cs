@@ -1,4 +1,6 @@
-﻿namespace Moq.EntityFrameworkCore
+﻿using System.Threading;
+
+namespace Moq.EntityFrameworkCore
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -34,7 +36,7 @@
             var entitiesAsQueryable = entities.AsQueryable();
 
             dbSetMock.As<IAsyncEnumerable<TEntity>>()
-               .Setup(m => m.GetEnumerator())
+               .Setup(m => m.GetAsyncEnumerator(CancellationToken.None))
                .Returns(new InMemoryDbAsyncEnumerator<TEntity>(entitiesAsQueryable.GetEnumerator()));
 
             dbSetMock.As<IQueryable<TEntity>>()

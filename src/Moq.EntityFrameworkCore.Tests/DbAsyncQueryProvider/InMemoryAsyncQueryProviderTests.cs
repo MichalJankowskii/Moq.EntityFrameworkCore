@@ -76,7 +76,7 @@
             this.inMemoryAsyncQueryProvider.ExecuteAsync(this.expression, CancellationToken.None);
 
             // Assert
-            this.queryProviderMock.Verify(x => x.Execute(this.expression));
+            this.queryProviderMock.Verify(x => x.Execute<object>(this.expression));
         }
 
         [Fact]
