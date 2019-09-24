@@ -63,7 +63,7 @@
         public void Given_InMemoryAsyncQueryProvider_When_ExecutingQueryAsync_Then_ExecutionIsDoneAtInnerQueryProvider()
         {
             // Act
-            this.inMemoryAsyncQueryProvider.ExecuteAsync<int>(this.expression);
+            this.inMemoryAsyncQueryProvider.ExecuteAsync<int>(this.expression, CancellationToken.None);
 
             // Assert
             this.queryProviderMock.Verify(x => x.Execute<int>(this.expression));

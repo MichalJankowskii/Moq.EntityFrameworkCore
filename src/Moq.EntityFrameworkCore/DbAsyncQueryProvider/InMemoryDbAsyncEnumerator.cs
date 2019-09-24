@@ -26,6 +26,11 @@
             return Task.FromResult(this.innerEnumerator.MoveNext());
         }
 
+        public ValueTask<bool> MoveNextAsync()
+        {
+            return new ValueTask<bool>(this.innerEnumerator.MoveNext());
+        }
+
         public T Current => this.innerEnumerator.Current;
 
         protected virtual void Dispose(bool disposing)
@@ -42,5 +47,14 @@
             }
         }
 
+        public ValueTask DisposeAsync()
+        {
+            if (!this.disposed)
+            {
+                this.innerEnumerator.Dispose();
+                this.disposed = true;
+            }
+            return new ValueTask();
+        }
     }
 }

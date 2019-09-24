@@ -1,11 +1,12 @@
-﻿namespace Moq.EntityFrameworkCore
-{
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.EntityFrameworkCore;
-    using Moq.EntityFrameworkCore.DbAsyncQueryProvider;
-    using Moq.Language.Flow;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using Microsoft.EntityFrameworkCore;
+using Moq.EntityFrameworkCore.DbAsyncQueryProvider;
+using Moq.Language.Flow;
 
+namespace Moq.EntityFrameworkCore
+{
     public static class MoqExtensions
     {
         public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>> dbSetMock = null) where T : DbContext where TEntity : class
@@ -34,7 +35,7 @@
             var entitiesAsQueryable = entities.AsQueryable();
 
             dbSetMock.As<IAsyncEnumerable<TEntity>>()
-               .Setup(m => m.GetEnumerator())
+               .Setup(m => m.GetAsyncEnumerator(CancellationToken.None))
                .Returns(new InMemoryDbAsyncEnumerator<TEntity>(entitiesAsQueryable.GetEnumerator()));
 
             dbSetMock.As<IQueryable<TEntity>>()

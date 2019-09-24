@@ -1,16 +1,17 @@
-﻿namespace Moq.EntityFrameworkCore.DbAsyncQueryProvider
-{
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.EntityFrameworkCore.Query.Internal;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
+namespace Moq.EntityFrameworkCore.DbAsyncQueryProvider
+{
     public class InMemoryAsyncQueryProvider<TEntity> : IAsyncQueryProvider
     {
         private readonly IQueryProvider innerQueryProvider;
 
+        #region OldCode
         public InMemoryAsyncQueryProvider(IQueryProvider innerQueryProvider)
         {
             this.innerQueryProvider = innerQueryProvider;
@@ -41,15 +42,18 @@
             return Task.FromResult(this.Execute(expression));
         }
 
-        public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
-        {
+//        public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
+//        {
+//
+//            return Task.FromResult(this.Execute<TResult>(expression)).ToAsyncEnumerable();
+//        }
 
-            return Task.FromResult(this.Execute<TResult>(expression)).ToAsyncEnumerable();
-        }
-
-        public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+        public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
-            return Task.FromResult(this.Execute<TResult>(expression));
+            return Execute<TResult>(expression);
         }
+        #endregion
+        
+
     }
 }
