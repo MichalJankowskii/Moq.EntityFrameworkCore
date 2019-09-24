@@ -61,7 +61,7 @@
             roles.Add(disabledRole);
 
             var userContextMock = new Mock<UsersContext>();
-            userContextMock.Setup(x => x.Roles).ReturnsDbQuery(roles);
+            userContextMock.Setup(x => x.Roles).ReturnsDbSet(roles);
 
             var usersService = new UsersService(userContextMock.Object);
 
@@ -81,7 +81,7 @@
             roles.Add(disabledRole);
 
             var userContextMock = new Mock<UsersContext>();
-            userContextMock.Setup(x => x.Roles).ReturnsDbQuery(roles);
+            userContextMock.Setup(x => x.Roles).ReturnsDbSet(roles);
 
             var usersService = new UsersService(userContextMock.Object);
 

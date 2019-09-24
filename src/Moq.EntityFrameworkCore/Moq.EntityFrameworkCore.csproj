@@ -6,6 +6,7 @@
     <FileVersion>2.0.2.0</FileVersion>
     <Version>2.2.1</Version>
     <LangVersion>8</LangVersion>
+    <PackageVersion>3.0.0</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

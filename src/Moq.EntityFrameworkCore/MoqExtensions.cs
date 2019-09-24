@@ -17,16 +17,6 @@ namespace Moq.EntityFrameworkCore
 
             return setupResult.Returns(dbSetMock.Object);
         }
-
-        public static IReturnsResult<T> ReturnsDbQuery<T, TEntity>(this ISetup<T, DbQuery<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbQuery<TEntity>> dbQueryMock = null) where T : DbContext where TEntity : class
-        {
-            dbQueryMock = dbQueryMock ?? new Mock<DbQuery<TEntity>>();
-
-            ConfigureMock(dbQueryMock, entities);
-
-            return setupResult.Returns(dbQueryMock.Object);
-        }
-
         /// <summary>
         /// Configures a Mock for a <see cref="DbSet{TEntity}"/> or a <see cref="DbQuery{TQuery}"/> so that it can be queriable via LINQ
         /// </summary>
