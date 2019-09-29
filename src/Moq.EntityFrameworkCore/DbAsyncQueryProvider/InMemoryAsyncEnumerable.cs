@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
 
     public class InMemoryAsyncEnumerable<T> : EnumerableQuery<T>, IAsyncEnumerable<T>, IQueryable<T>
     {
@@ -18,7 +19,7 @@
 
         IQueryProvider IQueryable.Provider => new InMemoryAsyncQueryProvider<T>(this);
 
-        public IAsyncEnumerator<T> GetAsyncEnumerator()
+        public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
         {
             return new InMemoryDbAsyncEnumerator<T>(this.AsEnumerable().GetEnumerator());
         }

@@ -21,9 +21,20 @@
             GC.SuppressFinalize(this);
         }
 
+        public ValueTask DisposeAsync()
+        {
+            Dispose();
+            return new ValueTask();
+        }
+
         public Task<bool> MoveNext(CancellationToken cancellationToken)
         {
             return Task.FromResult(this.innerEnumerator.MoveNext());
+        }
+
+        public ValueTask<bool> MoveNextAsync()
+        {
+            return new ValueTask<bool>(Task.FromResult(this.innerEnumerator.MoveNext()));
         }
 
         public T Current => this.innerEnumerator.Current;
@@ -41,6 +52,5 @@
                 this.disposed = true;
             }
         }
-
     }
 }

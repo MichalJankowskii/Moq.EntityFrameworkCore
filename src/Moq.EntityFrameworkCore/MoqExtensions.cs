@@ -1,7 +1,9 @@
 ﻿namespace Moq.EntityFrameworkCore
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using Microsoft.EntityFrameworkCore;
     using Moq.EntityFrameworkCore.DbAsyncQueryProvider;
     using Moq.Language.Flow;
@@ -17,6 +19,7 @@
             return setupResult.Returns(dbSetMock.Object);
         }
 
+        [Obsolete("Use ReturnsDbSet<T, TEntity> instead")]
         public static IReturnsResult<T> ReturnsDbQuery<T, TEntity>(this ISetup<T, DbQuery<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbQuery<TEntity>> dbQueryMock = null) where T : DbContext where TEntity : class
         {
             dbQueryMock = dbQueryMock ?? new Mock<DbQuery<TEntity>>();
@@ -34,7 +37,7 @@
             var entitiesAsQueryable = entities.AsQueryable();
 
             dbSetMock.As<IAsyncEnumerable<TEntity>>()
-               .Setup(m => m.GetEnumerator())
+               .Setup(m => m.GetAsyncEnumerator(CancellationToken.None))
                .Returns(new InMemoryDbAsyncEnumerator<TEntity>(entitiesAsQueryable.GetEnumerator()));
 
             dbSetMock.As<IQueryable<TEntity>>()
