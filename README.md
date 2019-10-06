@@ -1,6 +1,5 @@
 # Moq.EntityFrameworkCore
-[![Build Status](https://travis-ci.org/MichalJankowskii/Moq.EntityFrameworkCore.svg?branch=master)](https://travis-ci.org/MichalJankowskii/Moq.EntityFrameworkCore)
-[![Downloads](https://img.shields.io/nuget/dt/Moq.EntityFrameworkCore.svg)](https://www.nuget.org/packages/Moq.EntityFrameworkCore/)
+[![Build Status](https://dev.azure.com/OpenSource-jankowskimichalpl/Moq.EntityFrameworkCore/_apis/build/status/MichalJankowskii.Moq.EntityFrameworkCore?branchName=master)](https://dev.azure.com/OpenSource-jankowskimichalpl/Moq.EntityFrameworkCore/_build/latest?definitionId=1&branchName=master)[![Downloads](https://img.shields.io/nuget/dt/Moq.EntityFrameworkCore.svg)](https://www.nuget.org/packages/Moq.EntityFrameworkCore/)
 
 This library helps you mocking EntityFramework contexts. Now you will be able to test methods that are using `DbSet<TEntity>` or `DbQuery<TEntity>` from `DbContext` in an effective way.
 ## Installation - NuGet Packages
