@@ -6,10 +6,35 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  efVersion: '3.0.0'
+  versionBuildNumber: $[counter('3.0.0', 1)]
+  packageVersion: $(efVersion)-$(versionBuildNumber)
 
 steps:
 - task: DotNetCoreCLI@2
+  displayName: 'Building'
   inputs:
     command: 'build'
-    projects: '/src/Moq.EntityFrameworkCore.sln'
+    projects: 'src/Moq.EntityFrameworkCore.sln'
     arguments: '--configuration $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: 'Testing'
+  inputs:
+    command: 'test'
+    projects: 'src/Moq.EntityFrameworkCore.sln'
+    arguments: '--configuration $(buildConfiguration)'
+    publishTestResults: false
+    testRunTitle: 'Testing'
+- task: DotNetCoreCLI@2
+  displayName: "Packing"
+  inputs:
+    command: 'pack'
+    packagesToPack: 'src/Moq.EntityFrameworkCore/Moq.EntityFrameworkCore.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: packageVersion
+- task: PublishBuildArtifacts@1
+  displayName: 'Publishing'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'package'
+    publishLocation: 'Container'
