@@ -6,3 +6,6 @@ Update nuget packages version
 
 Version 2.0.1:
 Change extension method name to ReturnDbSet
+
+Version 3.0.0.4
+Added support for EF3.0
