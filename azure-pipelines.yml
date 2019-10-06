@@ -8,7 +8,7 @@ variables:
   buildConfiguration: 'Release'
   efVersion: '3.0.0'
   versionBuildNumber: $[counter('3.0.0', 1)]
-  packageVersion: $(efVersion)-$(versionBuildNumber)
+  packageVersion: $(efVersion).$(versionBuildNumber)
 
 steps:
 - task: DotNetCoreCLI@2
