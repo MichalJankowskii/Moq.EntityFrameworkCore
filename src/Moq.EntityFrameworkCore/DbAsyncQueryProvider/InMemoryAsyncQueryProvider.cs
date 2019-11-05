@@ -37,9 +37,20 @@
 
         public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken = new CancellationToken())
         {
-            return Execute<TResult>(expression);
+            var result = Execute(expression);
+            
+            var expectedResultType = typeof(TResult).GetGenericArguments()?.FirstOrDefault();
+            if (expectedResultType == null)
+            {
+                return default(TResult);
+            }
+
+            return (TResult)typeof(Task).GetMethod(nameof(Task.FromResult))
+                ?.MakeGenericMethod(expectedResultType)
+                .Invoke(null, new[] { result });
         }
-        
+
+
         public Task<object> ExecuteAsync(Expression expression, CancellationToken cancellationToken)
         {
             return Task.FromResult(this.Execute(expression));
