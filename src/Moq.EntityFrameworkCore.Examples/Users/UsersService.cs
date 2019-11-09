@@ -1,10 +1,12 @@
 ﻿namespace Moq.EntityFrameworkCore.Examples.Users
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
     using Moq.EntityFrameworkCore.Examples.Users.Entities;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     public class UsersService
     {
@@ -33,6 +35,11 @@
         public async Task<IList<Role>> GetDisabledRolesAsync()
         {
             return await this.usersContext.Roles.Where(x => !x.IsEnabled).ToListAsync();
+        }
+
+        public async Task<User> FindOneUserAsync(Expression<Func<User, bool>> predicate)
+        {
+            return await this.usersContext.Set<User>().FirstOrDefaultAsync(predicate);
         }
     }
 }

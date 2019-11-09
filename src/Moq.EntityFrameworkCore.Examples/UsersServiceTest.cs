@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Xunit;
+    using System.Linq;
 
     public class UsersServiceTest
     {
@@ -90,6 +91,23 @@
 
             // Assert
             Assert.Equal(new List<Role> { disabledRole }, disabledRoles);
+        }
+
+        [Fact]
+        public async Task Given_ListOfUser_When_FindOneUserAsync_Then_CorrectUserIsReturned()
+        {
+            var users = GenerateNotLockedUsers();
+            var userContextMock = new Mock<UsersContext>();
+            userContextMock.Setup(x => x.Set<User>()).ReturnsDbSet(users);
+
+            var usersService = new UsersService(userContextMock.Object);
+            var user = users.FirstOrDefault();
+
+            //Act
+            var userToAssert = await usersService.FindOneUserAsync(x => x.Id == user.Id);
+
+            //Assert
+            Assert.Equal(userToAssert, user);
         }
 
         private static IList<User> GenerateNotLockedUsers()

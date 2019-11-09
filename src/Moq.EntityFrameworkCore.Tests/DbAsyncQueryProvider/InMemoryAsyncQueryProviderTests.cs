@@ -66,7 +66,7 @@
             this.inMemoryAsyncQueryProvider.ExecuteAsync<int>(this.expression);
 
             // Assert
-            this.queryProviderMock.Verify(x => x.Execute<int>(this.expression));
+            this.queryProviderMock.Verify(x => x.Execute(this.expression));
         }
 
         [Fact]
@@ -86,7 +86,7 @@
             this.inMemoryAsyncQueryProvider.ExecuteAsync<int>(this.expression, CancellationToken.None);
 
             // Assert
-            this.queryProviderMock.Verify(x => x.Execute<int>(this.expression));
+            this.queryProviderMock.Verify(x => x.Execute(this.expression));
         }
     }
 }
