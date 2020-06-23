@@ -273,3 +273,6 @@ __pycache__/
 
 ### VisualStudio Patch ###
 build/
+
+### NCrunch files
+*.ncrunchsolution
