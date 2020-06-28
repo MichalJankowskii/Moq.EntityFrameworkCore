@@ -54,6 +54,10 @@
 
             if (finder != null)
             {
+                dbSetMock.Setup(dbSet => dbSet.Find(It.IsAny<object[]>(), It.IsAny<CancellationToken>()))
+                    .Returns((object[] parameters, CancellationToken cancellationToken)
+                        => entities.SingleOrDefault(entity => finder(entity, parameters)));
+
                 dbSetMock.Setup(dbSet => dbSet.FindAsync(It.IsAny<object[]>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync((object[] parameters, CancellationToken cancellationToken)
                         => entities.SingleOrDefault(entity => finder(entity, parameters)));
