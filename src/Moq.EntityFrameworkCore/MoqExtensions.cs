@@ -10,7 +10,7 @@
 
     public static class MoqExtensions
     {
-        public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>> dbSetMock = null) where T : DbContext where TEntity : class
+        public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>> dbSetMock = null) where T : class where TEntity : class
         {
             dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
 
@@ -20,7 +20,7 @@
         }
 
         [Obsolete("Use ReturnsDbSet<T, TEntity> instead")]
-        public static IReturnsResult<T> ReturnsDbQuery<T, TEntity>(this ISetup<T, DbQuery<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbQuery<TEntity>> dbQueryMock = null) where T : DbContext where TEntity : class
+        public static IReturnsResult<T> ReturnsDbQuery<T, TEntity>(this ISetup<T, DbQuery<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbQuery<TEntity>> dbQueryMock = null) where T : class where TEntity : class
         {
             dbQueryMock = dbQueryMock ?? new Mock<DbQuery<TEntity>>();
 
