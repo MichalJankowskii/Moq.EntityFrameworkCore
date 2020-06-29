@@ -38,4 +38,18 @@ userContextMock.Setup(x => x.Roles).ReturnsDbQuery(roles);
 
 And this is all. You can use your `DbContext` in your tests.
 
+The second option is mocking `DbSet` that is part of the interface:
+```csharp
+public interface IBlogContext
+{
+   DbSet<Post> Posts { get; }
+}
+```
+
+And then use:
+```csharp
+var posts = new List<Post>();
+var contextMock = new Mock<IBlogContext>();
+contextMock.Setup(p => p.Posts).ReturnsDbSet(posts);
+```
 You will find examples of this library in the [repository](https://github.com/MichalJankowskii/Moq.EntityFrameworkCore/blob/master/src/Moq.EntityFrameworkCore.Examples/UsersServiceTest.cs).

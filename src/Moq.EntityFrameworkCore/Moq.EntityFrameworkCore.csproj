@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/MichalJankowskii/Moq.EntityFrameworkCore</PackageProjectUrl>
     <RepositoryUrl>https://github.com/MichalJankowskii/Moq.EntityFrameworkCore</RepositoryUrl>
     <PackageTags>Moq mocking EF EnityFramework DbSet DbContext unit test testing framework assert TDD BDD EntityFrameworkCore EFCore Core</PackageTags>
-    <PackageReleaseNotes>- fix issue with querying a DbSet via LINQ that is mocked</PackageReleaseNotes>
+    <PackageReleaseNotes>- Added support for interfaces and classes that are not delivering from DbContext</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 

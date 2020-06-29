@@ -9,3 +9,6 @@ Change extension method name to ReturnDbSet
 
 Version 3.0.0.4
 Added support for EF3.0
+
+Version 3.1.2.6
+Added support for interfaces and classes that are not delivering from DbContext
