@@ -16,6 +16,8 @@ variables:
   packageVersion: $(efVersion).$(versionBuildNumber)
 
 steps:
+- bash: echo $(packageVersion)
+  displayName: Print version
 - task: DotNetCoreCLI@2
   displayName: 'Building'
   inputs:
