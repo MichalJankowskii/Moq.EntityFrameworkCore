@@ -41,5 +41,10 @@
         {
             return await this.usersContext.Set<User>().FirstOrDefaultAsync(predicate);
         }
+
+        public async Task<User> FindAsync(params object[] keyValues)
+        {
+            return await this.usersContext.Users.FindAsync(keyValues);
+        }
     }
 }

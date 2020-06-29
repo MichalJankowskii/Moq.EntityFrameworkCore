@@ -110,6 +110,23 @@
             Assert.Equal(userToAssert, user);
         }
 
+        [Fact]
+        public async Task Given_ListOfUser_When_FindAsync_Then_CorrectUserIsReturned()
+        {
+            var users = GenerateNotLockedUsers();
+            var userContextMock = new Mock<UsersContext>();
+            userContextMock.Setup(m => m.Users.FindAsync(It.IsAny<object[]>())).Returns<object[]>(async (d) => await Task.FromResult(users.FirstOrDefault()));
+
+            var usersService = new UsersService(userContextMock.Object);
+            var user = users.FirstOrDefault();
+
+            //Act
+            var userToAssert = await usersService.FindAsync(user.Id);
+
+            //Assert
+            Assert.Equal(userToAssert, user);
+        }
+
         private static IList<User> GenerateNotLockedUsers()
         {
             IList<User> users = new List<User>
