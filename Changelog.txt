@@ -6,3 +6,6 @@ Update nuget packages version
 
 Version 2.0.1:
 Change extension method name to ReturnDbSet
+
+Version 2.2.1.1
+Fix issue connected to using LINQ multiple times

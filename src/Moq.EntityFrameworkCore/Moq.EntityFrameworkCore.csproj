@@ -5,6 +5,7 @@
     <AssemblyVersion>2.0.2.0</AssemblyVersion>
     <FileVersion>2.0.2.0</FileVersion>
     <Version>2.2.1</Version>
+    <PackageReleaseNotes>Fix issue connected to using LINQ multiple times</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
