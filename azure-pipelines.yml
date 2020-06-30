@@ -11,8 +11,8 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  efVersion: '3.1.2'
-  versionBuildNumber: $[counter('3.1.2', 1)]
+  efVersion: '2.2.1'
+  versionBuildNumber: $[counter('2.2.1', 1)]
   packageVersion: $(efVersion).$(versionBuildNumber)
 
 steps:
