@@ -110,6 +110,26 @@
             Assert.Equal(userToAssert, user);
         }
 
+        [Fact]
+        public async Task Given_Two_ListOfUser_Then_CorrectListIsReturned_InSequence()
+        {
+            var users = GenerateNotLockedUsers();
+            var userContextMock = new Mock<UsersContext>();
+            userContextMock.SetupSequence(x => x.Users)
+                .ReturnsDbSet(new List<User>())
+                .ReturnsDbSet(users);
+
+            var usersService = new UsersService(userContextMock.Object);
+
+            // Act
+            var userResults = await usersService.ChangeSetInSequence();
+
+            //Assert
+            Assert.Equal(users.Count, userResults.Count);
+            Assert.Equal(userResults[0].Login, users[0].Login);
+            Assert.Equal(userResults[1].Login, users[1].Login);
+        }
+
         private static IList<User> GenerateNotLockedUsers()
         {
             IList<User> users = new List<User>
