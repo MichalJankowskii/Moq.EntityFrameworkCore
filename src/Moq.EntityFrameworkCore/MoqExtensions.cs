@@ -6,6 +6,8 @@
     using System.Threading;
     using Microsoft.EntityFrameworkCore;
     using Moq.EntityFrameworkCore.DbAsyncQueryProvider;
+
+    using Moq.Language;
     using Moq.Language.Flow;
 
     public static class MoqExtensions
@@ -27,6 +29,15 @@
             ConfigureMock(dbQueryMock, entities);
 
             return setupResult.Returns(dbQueryMock.Object);
+        }
+
+        public static ISetupSequentialResult<DbSet<TEntity>> ReturnsDbSet<TEntity>(this ISetupSequentialResult<DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>> dbSetMock = null) where TEntity : class
+        {
+            dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
+
+            ConfigureMock(dbSetMock, entities);
+
+            return setupResult.Returns(dbSetMock.Object);
         }
 
         /// <summary>
