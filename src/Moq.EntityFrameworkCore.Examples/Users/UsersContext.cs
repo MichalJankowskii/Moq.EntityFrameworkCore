@@ -6,7 +6,5 @@
     public class UsersContext : DbContext
     {
         public virtual DbSet<User> Users { get; set; }
-
-        public virtual DbQuery<Role> Roles { get; set; }
-    }
+	}
 }

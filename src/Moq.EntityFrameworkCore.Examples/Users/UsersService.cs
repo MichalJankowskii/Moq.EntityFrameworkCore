@@ -27,16 +27,6 @@
             return await this.usersContext.Users.Where(x => x.AccountLocked).ToListAsync();
         }
 
-        public IList<Role> GetDisabledRoles()
-        {
-            return this.usersContext.Roles.Where(x => !x.IsEnabled).ToList();
-        }
-
-        public async Task<IList<Role>> GetDisabledRolesAsync()
-        {
-            return await this.usersContext.Roles.Where(x => !x.IsEnabled).ToListAsync();
-        }
-
         public async Task<User> FindOneUserAsync(Expression<Func<User, bool>> predicate)
         {
             return await this.usersContext.Set<User>().FirstOrDefaultAsync(predicate);

@@ -53,45 +53,6 @@
             Assert.Equal(new List<User> { lockedUser }, lockedUsers);
         }
 
-        [Fact]
-        public void Given_ListOfGroupsWithOneGroupDisabled_When_CheckingWhichOneIsDisabled_Then_CorrectDisabledRoleIsReturned()
-        {
-            // Arrange
-            IList<Role> roles = GenerateEnabledGroups();
-            var disabledRole = Fixture.Build<Role>().With(u => u.IsEnabled, false).Create();
-            roles.Add(disabledRole);
-
-            var userContextMock = new Mock<UsersContext>();
-            userContextMock.Setup(x => x.Roles).ReturnsDbQuery(roles);
-
-            var usersService = new UsersService(userContextMock.Object);
-
-            // Act
-            var disabledRoles = usersService.GetDisabledRoles();
-
-            // Assert
-            Assert.Equal(new List<Role> { disabledRole }, disabledRoles);
-        }
-
-        [Fact]
-        public async Task Given_ListOfGroupsWithOneGroupDisabled_When_CheckingWhichOneIsDisabledAsync_Then_CorrectDisabledRoleIsReturned()
-        {
-            // Arrange
-            IList<Role> roles = GenerateEnabledGroups();
-            var disabledRole = Fixture.Build<Role>().With(u => u.IsEnabled, false).Create();
-            roles.Add(disabledRole);
-
-            var userContextMock = new Mock<UsersContext>();
-            userContextMock.Setup(x => x.Roles).ReturnsDbQuery(roles);
-
-            var usersService = new UsersService(userContextMock.Object);
-
-            // Act
-            var disabledRoles = await usersService.GetDisabledRolesAsync();
-
-            // Assert
-            Assert.Equal(new List<Role> { disabledRole }, disabledRoles);
-        }
 
         [Fact]
         public async Task Given_ListOfUser_When_FindOneUserAsync_Then_CorrectUserIsReturned()

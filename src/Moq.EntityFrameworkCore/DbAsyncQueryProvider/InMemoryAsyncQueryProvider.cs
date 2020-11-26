@@ -4,9 +4,9 @@
     using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.EntityFrameworkCore.Query.Internal;
+    using Microsoft.EntityFrameworkCore.Query;
 
-    public class InMemoryAsyncQueryProvider<TEntity> : IAsyncQueryProvider
+	public class InMemoryAsyncQueryProvider<TEntity> : IAsyncQueryProvider
     {
         private readonly IQueryProvider innerQueryProvider;
 
