@@ -36,6 +36,15 @@ userContextMock.Setup(x => x.Users).ReturnsDbSet(users);
 userContextMock.Setup(x => x.Roles).ReturnsDbQuery(roles);
 ```
 
+or
+```csharp
+userContextMock.SetupSequence(x => x.Set<User>())
+  .ReturnsDbSet(new List<User>())
+  .ReturnsDbSet(users);
+```
+
+
+
 And this is all. You can use your `DbContext` in your tests.
 
 The second option is mocking `DbSet` that is part of the interface:
