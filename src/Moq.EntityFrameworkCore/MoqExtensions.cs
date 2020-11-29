@@ -6,7 +6,6 @@
     using System.Threading;
     using Microsoft.EntityFrameworkCore;
     using Moq.EntityFrameworkCore.DbAsyncQueryProvider;
-
     using Moq.Language;
     using Moq.Language.Flow;
 

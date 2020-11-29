@@ -115,19 +115,21 @@
         {
             var users = GenerateNotLockedUsers();
             var userContextMock = new Mock<UsersContext>();
-            userContextMock.SetupSequence(x => x.Users)
+            userContextMock.SetupSequence(x => x.Set<User>())
                 .ReturnsDbSet(new List<User>())
                 .ReturnsDbSet(users);
 
             var usersService = new UsersService(userContextMock.Object);
 
-            // Act
-            var userResults = await usersService.ChangeSetInSequence();
+            var user = users.FirstOrDefault();
+
+            //Act
+            var userToAssertWhenFirstCall = await usersService.FindOneUserAsync(x => x.Id == user.Id);
+            var userToAssertWhenSecondCall = await usersService.FindOneUserAsync(x => x.Id == user.Id);
 
             //Assert
-            Assert.Equal(users.Count, userResults.Count);
-            Assert.Equal(userResults[0].Login, users[0].Login);
-            Assert.Equal(userResults[1].Login, users[1].Login);
+            Assert.Null(userToAssertWhenFirstCall);
+            Assert.Equal(userToAssertWhenSecondCall, user);
         }
 
         private static IList<User> GenerateNotLockedUsers()
