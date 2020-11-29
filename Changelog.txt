@@ -15,3 +15,6 @@ Added support for interfaces and classes that are not delivering from DbContext
 
 Version 3.1.2.13
 Added support for SetupSequentialResult
+
+Version 5.0.0.1
+Added support for EntityFrameworkCore 5.0.0

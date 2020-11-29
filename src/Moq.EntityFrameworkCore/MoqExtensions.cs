@@ -20,16 +20,6 @@
             return setupResult.Returns(dbSetMock.Object);
         }
 
-        [Obsolete("Use ReturnsDbSet<T, TEntity> instead")]
-        public static IReturnsResult<T> ReturnsDbQuery<T, TEntity>(this ISetup<T, DbQuery<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbQuery<TEntity>> dbQueryMock = null) where T : class where TEntity : class
-        {
-            dbQueryMock = dbQueryMock ?? new Mock<DbQuery<TEntity>>();
-
-            ConfigureMock(dbQueryMock, entities);
-
-            return setupResult.Returns(dbQueryMock.Object);
-        }
-
         public static ISetupSequentialResult<DbSet<TEntity>> ReturnsDbSet<TEntity>(this ISetupSequentialResult<DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>> dbSetMock = null) where TEntity : class
         {
             dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();

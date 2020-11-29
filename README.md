@@ -14,8 +14,6 @@ For example we can assume that we have the following production code:
 public class UsersContext : DbContext
 {
     public virtual DbSet<User> Users { get; set; }
-
-    public virtual DbQuery<Role> Roles { get; set; }
 }
 ```
 
@@ -28,12 +26,10 @@ var userContextMock = new Mock<UsersContext>();
 2\. Generate your entities:
 ```csharp
 IList<User> users = ...;
-IList<Roles> roles = ...;
 ```
 3\. Setup `DbSet` or `DbQuery` property:
 ```csharp
 userContextMock.Setup(x => x.Users).ReturnsDbSet(users);
-userContextMock.Setup(x => x.Roles).ReturnsDbQuery(roles);
 ```
 
 or
