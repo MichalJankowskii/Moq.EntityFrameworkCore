@@ -41,5 +41,20 @@
         {
             return await this.usersContext.Set<User>().FirstOrDefaultAsync(predicate);
         }
+
+        public async Task<IList<User>> ChangeSetInSequence()
+        {
+            var users = await this.usersContext.Users.ToListAsync();
+
+            if (users.Count == 0)
+            {
+                // This simulates a method that changes the contents of the list between calls
+                // as frequenty happens when side effects from other services change a DbSet
+
+                return await this.usersContext.Users.ToListAsync();
+            }
+
+            return new List<User>();
+        }
     }
 }
