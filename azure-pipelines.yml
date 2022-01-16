@@ -18,6 +18,12 @@ variables:
 steps:
 - bash: echo $(packageVersion)
   displayName: Print version
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk'
+  inputs:
+    packageType: sdk
+    version: 6.0.1
+    installationPath: $(Agent.ToolsDirectory)/dotnet
 - task: DotNetCoreCLI@2
   displayName: 'Building'
   inputs:
