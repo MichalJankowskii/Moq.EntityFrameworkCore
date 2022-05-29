@@ -34,6 +34,26 @@
         }
 
         [Fact]
+        public void Given_ListOfUsersWithOneUserAccountLockAndMockingWithSetupGet_When_CheckingWhoIsLocked_Then_CorrectLockedUserIsReturned()
+        {
+            // Arrange
+            IList<User> users = GenerateNotLockedUsers();
+            var lockedUser = Fixture.Build<User>().With(u => u.AccountLocked, true).Create();
+            users.Add(lockedUser);
+
+            var userContextMock = new Mock<UsersContext>();
+            userContextMock.SetupGet(x => x.Users).ReturnsDbSet(users);
+
+            var usersService = new UsersService(userContextMock.Object);
+
+            // Act
+            var lockedUsers = usersService.GetLockedUsers();
+
+            // Assert
+            Assert.Equal(new List<User> { lockedUser }, lockedUsers);
+        }
+
+        [Fact]
         public async Task Given_ListOfUsersWithOneUserAccountLock_When_CheckingWhoIsLockedAsync_Then_CorrectLockedUserIsReturned()
         {
             // Arrange

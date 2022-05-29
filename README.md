@@ -31,7 +31,10 @@ IList<User> users = ...;
 ```csharp
 userContextMock.Setup(x => x.Users).ReturnsDbSet(users);
 ```
-
+or 
+```csharp
+userContextMock.SetupGet(x => x.Users).ReturnsDbSet(users);
+```
 or
 ```csharp
 userContextMock.SetupSequence(x => x.Set<User>())
