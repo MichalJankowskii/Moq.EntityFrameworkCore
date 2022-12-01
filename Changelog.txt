@@ -27,3 +27,6 @@ Added support for SetupGet
 
 Version 6.0.1.4
 Package versions update
+
+Version 7.0.0.1
+Added support for EntityFrameworkCore 7.0.0
