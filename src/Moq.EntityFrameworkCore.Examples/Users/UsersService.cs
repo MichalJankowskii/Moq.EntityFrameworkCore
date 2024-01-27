@@ -17,6 +17,12 @@
             this.usersContext = usersContext;
         }
 
+        public async Task AddUser(User user)
+        {
+            await this.usersContext.Users.AddAsync(user);
+            await this.usersContext.SaveChangesAsync();
+        }
+
         public IList<User> GetLockedUsers()
         {
             return this.usersContext.Users.Where(x => x.AccountLocked).ToList();

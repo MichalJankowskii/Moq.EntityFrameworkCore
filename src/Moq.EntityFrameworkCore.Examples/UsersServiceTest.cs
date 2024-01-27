@@ -8,6 +8,8 @@
     using System.Threading.Tasks;
     using Xunit;
     using System.Linq;
+    using System.Threading;
+    using Microsoft.EntityFrameworkCore;
 
     public class UsersServiceTest
     {
@@ -150,6 +152,24 @@
             //Assert
             Assert.Null(userToAssertWhenFirstCall);
             Assert.Equal(userToAssertWhenSecondCall, user);
+        }
+
+        [Fact]
+        public async Task Given_ListOfUser_When_AddingUser_Then_CorrectMethodsExecuted()
+        {
+            // Arrange
+            var user = Fixture.Build<User>().Create();
+            var usersDb = new Mock<DbSet<User>>();
+            var usersContextMock = new Mock<UsersContext>();
+            usersContextMock.Setup(x => x.Users).Returns(usersDb.Object);
+            var usersService = new UsersService(usersContextMock.Object);
+
+            // Act
+            await usersService.AddUser(user);
+
+            // Assert
+            usersDb.Verify(x => x.AddAsync(It.Is<User>(y => y == user), CancellationToken.None), Times.Once);
+            usersContextMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         private static IList<User> GenerateNotLockedUsers()
