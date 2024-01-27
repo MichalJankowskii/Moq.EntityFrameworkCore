@@ -14,8 +14,8 @@
     <PackageProjectUrl>https://github.com/MichalJankowskii/Moq.EntityFrameworkCore</PackageProjectUrl>
     <RepositoryUrl>https://github.com/MichalJankowskii/Moq.EntityFrameworkCore</RepositoryUrl>
     <PackageTags>Moq mocking EF EnityFramework DbSet DbContext unit test testing framework assert TDD BDD EntityFrameworkCore EFCore Core</PackageTags>
-    <PackageReleaseNotes>Version 8.0.0.1
-Added support for EntityFrameworkCore 8.0</PackageReleaseNotes>
+    <PackageReleaseNotes>Version 8.0.1.1
+Added support for EntityFrameworkCore 8.0.1</PackageReleaseNotes>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
@@ -28,7 +28,7 @@ Added support for EntityFrameworkCore 8.0</PackageReleaseNotes>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
     <PackageReference Include="Moq" Version="4.18.1" />
   </ItemGroup>
 
