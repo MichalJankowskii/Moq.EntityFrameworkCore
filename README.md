@@ -60,4 +60,13 @@ var posts = new List<Post>();
 var contextMock = new Mock<IBlogContext>();
 contextMock.Setup(p => p.Posts).ReturnsDbSet(posts);
 ```
+
+## Using ReturnsDbSetWithGlobalFilter
+You can also use `ReturnsDbSetWithGlobalFilter` to set up a `DbSet` with a global filter. For example:
+```csharp
+var users = new List<User> { new User { IsActive = true }, new User { IsActive = false } };
+var userContextMock = new Mock<UsersContext>();
+userContextMock.Setup(x => x.Users).ReturnsDbSetWithGlobalFilter(users, u => u.IsActive);
+```
+
 You will find examples of this library in the [repository](https://github.com/MichalJankowskii/Moq.EntityFrameworkCore/blob/master/src/Moq.EntityFrameworkCore.Examples/UsersServiceTest.cs).

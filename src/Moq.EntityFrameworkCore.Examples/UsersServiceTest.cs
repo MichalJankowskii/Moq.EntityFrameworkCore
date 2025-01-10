@@ -172,6 +172,30 @@
             usersContextMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
+        [Fact]
+        public async Task Given_UsersWithGlobalFilter_When_GetAllUsersAsync_Then_OnlyFilteredUsersAreReturned()
+        {
+            // Arrange
+            var userJohn = new User { Id = 1, Name = "John" };
+            var userJack = new User { Id = 3, Name = "Jack" };
+
+            var usersContextMock = new Mock<UsersContext>();
+            usersContextMock.Setup(x => x.Users)
+                .ReturnsDbSetWithGlobalFilter(
+                    new List<User> { userJohn, userJack },
+                    user => user.Name == "John"
+                );
+
+            var usersService = new UsersService(usersContextMock.Object);
+
+            // Act
+            var result = await usersService.GetAllUsersAsync(CancellationToken.None); // should exclude userJack
+
+            // Assert
+            Assert.Single(result);
+            Assert.Equal(1, result.First().Id);
+        }
+
         private static IList<User> GenerateNotLockedUsers()
         {
             IList<User> users = new List<User>

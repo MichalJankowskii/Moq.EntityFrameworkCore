@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class UsersService
@@ -46,6 +47,11 @@
         public async Task<User> FindOneUserAsync(Expression<Func<User, bool>> predicate)
         {
             return await this.usersContext.Set<User>().FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task<IList<User>> GetAllUsersAsync(CancellationToken cancellationToken)
+        {
+            return await this.usersContext.Users.ToListAsync(cancellationToken);
         }
     }
 }
