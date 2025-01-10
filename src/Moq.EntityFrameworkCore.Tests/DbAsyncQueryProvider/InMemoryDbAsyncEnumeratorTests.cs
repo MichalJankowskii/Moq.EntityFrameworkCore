@@ -1,4 +1,6 @@
-﻿namespace Moq.EntityFrameworkCore.Tests.DbAsyncQueryProvider
+﻿using System.Threading.Tasks;
+
+namespace Moq.EntityFrameworkCore.Tests.DbAsyncQueryProvider
 {
     using System.Collections.Generic;
     using System.Threading;
@@ -36,7 +38,7 @@
         }
 
         [Fact]
-        public async void Given_InMemoryDbAsyncEnumerator_When_Current_Then_CurrentShouldBeSameAsInInnerEnumerator()
+        public async Task Given_InMemoryDbAsyncEnumerator_When_Current_Then_CurrentShouldBeSameAsInInnerEnumerator()
         {
             // Act
             await this.inMemoryDbAsyncEnumerator.MoveNext(CancellationToken.None);
