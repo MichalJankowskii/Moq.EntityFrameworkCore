@@ -17,7 +17,7 @@
 
             ConfigureMock(dbSetMock, entities);
 
-            return setupResult.Returns(dbSetMock.Object);
+            return setupResult.Returns(() => dbSetMock.Object);
         }
 
         public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>> dbSetMock = null) where T : class where TEntity : class
@@ -26,7 +26,7 @@
 
             ConfigureMock(dbSetMock, entities);
 
-            return setupResult.Returns(dbSetMock.Object);
+            return setupResult.Returns(() => dbSetMock.Object);
         }
 
         public static ISetupSequentialResult<DbSet<TEntity>> ReturnsDbSet<TEntity>(this ISetupSequentialResult<DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>> dbSetMock = null) where TEntity : class
@@ -35,7 +35,7 @@
 
             ConfigureMock(dbSetMock, entities);
 
-            return setupResult.Returns(dbSetMock.Object);
+            return setupResult.Returns(() => dbSetMock.Object);
         }
 
         /// <summary>
