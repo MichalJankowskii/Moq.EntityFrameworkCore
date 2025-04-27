@@ -1,0 +1,61 @@
+﻿namespace Moq.EntityFrameworkCore.Dynamic
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using Microsoft.EntityFrameworkCore;
+    using Moq.EntityFrameworkCore.DbAsyncQueryProvider;
+    using Moq.Language;
+    using Moq.Language.Flow;
+
+    public static class MoqExtensionsDynamic
+    {
+        public static IReturnsResult<T> ReturnsDbSetDynamic<T, TEntity>(this ISetupGetter<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>> dbSetMock = null) where T : class where TEntity : class
+        {
+            dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
+
+            ConfigureMockDynamic(dbSetMock, entities);
+
+            return setupResult.Returns(() => dbSetMock.Object);
+        }
+
+        public static IReturnsResult<T> ReturnsDbSetDynamic<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>> dbSetMock = null) where T : class where TEntity : class
+        {
+            dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
+
+            ConfigureMockDynamic(dbSetMock, entities);
+
+            return setupResult.Returns(() => dbSetMock.Object);
+        }
+
+        public static ISetupSequentialResult<DbSet<TEntity>> ReturnsDbSetDynamic<TEntity>(this ISetupSequentialResult<DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>> dbSetMock = null) where TEntity : class
+        {
+            dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
+
+            ConfigureMockDynamic(dbSetMock, entities);
+
+            return setupResult.Returns(() => dbSetMock.Object);
+        }
+
+        /// <summary>
+        /// Configures a Mock for a <see cref="DbSet{TEntity}"/> or a <see cref="DbQuery{TQuery}"/> so that it can be queriable via LINQ
+        /// </summary>
+        public static void ConfigureMockDynamic<TEntity>(Mock dbSetMock, IEnumerable<TEntity> entities) where TEntity : class
+        {
+            var entitiesAsQueryable = entities.AsQueryable();
+
+            dbSetMock.As<IAsyncEnumerable<TEntity>>()
+               .Setup(m => m.GetAsyncEnumerator(CancellationToken.None))
+               .Returns(() => new InMemoryDbAsyncEnumerator<TEntity>(entitiesAsQueryable.GetEnumerator()));
+
+            dbSetMock.As<IQueryable<TEntity>>()
+                .Setup(m => m.Provider)
+                .Returns(new InMemoryAsyncQueryProvider<TEntity>(entitiesAsQueryable.Provider));
+
+            dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(entitiesAsQueryable.Expression);
+            dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(entitiesAsQueryable.ElementType);
+            dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(() => entitiesAsQueryable.GetEnumerator());
+        }
+    }
+}

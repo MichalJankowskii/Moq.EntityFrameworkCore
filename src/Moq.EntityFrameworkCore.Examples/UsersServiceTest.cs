@@ -10,6 +10,7 @@
     using System.Linq;
     using System.Threading;
     using Microsoft.EntityFrameworkCore;
+    using Moq.EntityFrameworkCore.Dynamic;
 
     public class UsersServiceTest
     {

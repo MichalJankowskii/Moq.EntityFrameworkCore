@@ -69,4 +69,15 @@ var userContextMock = new Mock<UsersContext>();
 userContextMock.Setup(x => x.Users).ReturnsDbSetWithGlobalFilter(users, u => u.IsActive);
 ```
 
+## New Usage Option: ReturnsDbSetDynamic
+You can now use the ReturnsDbSetDynamic method for scenarios where you need lazy evaluation of your DbSet. This ensures that the DbSet is re-evaluated dynamically at runtime.
+
+```csharp
+userContextMock.Setup(x => x.Users).ReturnsDbSetDynamic(users);
+```
+
+### Explanation of Differences
+- `ReturnsDbSet`: Statically resolves the DbSet value during setup.
+- `ReturnsDbSetDynamic`: Dynamically resolves the DbSet value using a lambda, ensuring it reflects changes at runtime.
+
 You will find examples of this library in the [repository](https://github.com/MichalJankowskii/Moq.EntityFrameworkCore/blob/master/src/Moq.EntityFrameworkCore.Examples/UsersServiceTest.cs).
