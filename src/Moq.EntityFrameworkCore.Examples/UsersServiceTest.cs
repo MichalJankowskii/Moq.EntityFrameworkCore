@@ -172,7 +172,14 @@
             usersContextMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
-        public static TheoryData<CancellationToken> CancellationTokens => [CancellationToken.None, new CancellationTokenSource().Token];
+        public static TheoryData<CancellationToken> CancellationTokens
+        {
+            get
+            {
+                using var cancellationTokenSource = new CancellationTokenSource();
+                return [CancellationToken.None, cancellationTokenSource.Token];
+            }
+        }
 
         [Theory]
         [MemberData(nameof(CancellationTokens))]
