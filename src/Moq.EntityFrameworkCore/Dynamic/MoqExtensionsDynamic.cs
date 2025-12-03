@@ -39,7 +39,7 @@
         }
 
         /// <summary>
-        /// Configures a Mock for a <see cref="DbSet{TEntity}"/> or a <see cref="DbQuery{TQuery}"/> so that it can be queriable via LINQ
+        /// Configures a Mock for a <see cref="DbSet{TEntity}"/> so that it can be queriable via LINQ
         /// </summary>
         public static void ConfigureMockDynamic<TEntity>(Mock dbSetMock, IEnumerable<TEntity> entities) where TEntity : class
         {
