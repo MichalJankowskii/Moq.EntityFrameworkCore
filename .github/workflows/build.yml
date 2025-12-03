@@ -4,15 +4,12 @@ on:
   push:
     branches:
       - master
-      - main
-      - develop
     paths:
       - 'src/**'
       - '.github/workflows/**'
   pull_request:
     branches:
       - master
-      - main
     paths:
       - 'src/**'
   workflow_dispatch:
@@ -26,8 +23,10 @@ env:
 
 jobs:
   build:
-    name: Build and Test
+    name: Build
     runs-on: ubuntu-latest
+    outputs:
+      package_version: ${{ steps.version.outputs.package_version }}
     
     steps:
     - name: Checkout code
@@ -58,6 +57,45 @@ jobs:
     - name: Build solution
       run: dotnet build src/Moq.EntityFrameworkCore.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore /p:ContinuousIntegrationBuild=true
     
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output
+        path: |
+          src/**/bin/${{ env.BUILD_CONFIGURATION }}/**/*
+          src/**/obj/**/*
+        retention-days: 1
+    
+    - name: Create NuGet package
+      run: dotnet pack src/Moq.EntityFrameworkCore/Moq.EntityFrameworkCore.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build -p:PackageVersion=${{ steps.version.outputs.package_version }} --output ./artifacts
+    
+    - name: Upload NuGet package
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-package
+        path: ./artifacts/*.nupkg
+        retention-days: 90
+  
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-output
+        path: src/
+    
     - name: Run tests
       run: dotnet test src/Moq.EntityFrameworkCore.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger "trx;LogFileName=test-results.trx"
     
@@ -76,23 +114,14 @@ jobs:
         name: coverage-reports
         path: '**/TestResults/**/coverage.cobertura.xml'
         retention-days: 30
-    
-    - name: Create NuGet package
-      run: dotnet pack src/Moq.EntityFrameworkCore/Moq.EntityFrameworkCore.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build -p:PackageVersion=${{ env.PACKAGE_VERSION }} --output ./artifacts
-    
-    - name: Upload NuGet package
-      uses: actions/upload-artifact@v4
-      with:
-        name: nuget-package
-        path: ./artifacts/*.nupkg
-        retention-days: 90
+        if-no-files-found: warn
 
   # Optional: Automatic publish to NuGet.org on master branch
   # Uncomment and configure NUGET_API_KEY secret to enable
   # publish:
   #   name: Publish to NuGet.org
   #   runs-on: ubuntu-latest
-  #   needs: build
+  #   needs: [build, test]
   #   if: github.ref == 'refs/heads/master' && github.event_name == 'push'
   #   
   #   steps:
