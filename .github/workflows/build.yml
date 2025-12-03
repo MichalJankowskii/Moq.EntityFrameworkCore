@@ -160,10 +160,11 @@ jobs:
         echo "## 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
         TRX_FILE=$(find ./TestResults -name "*.trx" -type f 2>/dev/null | head -n 1)
         if [ -n "$TRX_FILE" ] && [ -f "$TRX_FILE" ]; then
-          TOTAL_TESTS=$(xmllint --xpath "count(//UnitTestResult)" "$TRX_FILE" 2>/dev/null || echo "0")
-          PASSED_TESTS=$(xmllint --xpath "count(//UnitTestResult[@outcome='Passed'])" "$TRX_FILE" 2>/dev/null || echo "0")
-          FAILED_TESTS=$(xmllint --xpath "count(//UnitTestResult[@outcome='Failed'])" "$TRX_FILE" 2>/dev/null || echo "0")
-          SKIPPED_TESTS=$(xmllint --xpath "count(//UnitTestResult[@outcome='NotExecuted'])" "$TRX_FILE" 2>/dev/null || echo "0")
+          # TRX files use namespaces, so we need to handle them properly
+          TOTAL_TESTS=$(xmllint --xpath "count(//*[local-name()='UnitTestResult'])" "$TRX_FILE" 2>/dev/null || echo "0")
+          PASSED_TESTS=$(xmllint --xpath "count(//*[local-name()='UnitTestResult' and @outcome='Passed'])" "$TRX_FILE" 2>/dev/null || echo "0")
+          FAILED_TESTS=$(xmllint --xpath "count(//*[local-name()='UnitTestResult' and @outcome='Failed'])" "$TRX_FILE" 2>/dev/null || echo "0")
+          SKIPPED_TESTS=$(xmllint --xpath "count(//*[local-name()='UnitTestResult' and @outcome='NotExecuted'])" "$TRX_FILE" 2>/dev/null || echo "0")
           
           echo "- **Total Tests**: $TOTAL_TESTS" >> $GITHUB_STEP_SUMMARY
           echo "- **Passed**: ✅ $PASSED_TESTS" >> $GITHUB_STEP_SUMMARY
