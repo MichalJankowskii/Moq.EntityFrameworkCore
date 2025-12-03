@@ -1,0 +1,87 @@
+name: Publish to NuGet
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version to publish (e.g., 9.0.0.1)'
+        required: true
+        type: string
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  publish:
+    name: Build and Publish to NuGet.org
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Determine version
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          # Extract version from release tag (assumes tag format: v9.0.0.1)
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${VERSION#v}" # Remove 'v' prefix if present
+        fi
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        echo "Publishing version: ${VERSION}"
+    
+    - name: Restore dependencies
+      run: dotnet restore src/Moq.EntityFrameworkCore.sln
+    
+    - name: Build solution
+      run: dotnet build src/Moq.EntityFrameworkCore.sln --configuration Release --no-restore /p:ContinuousIntegrationBuild=true
+    
+    - name: Run tests
+      run: dotnet test src/Moq.EntityFrameworkCore.sln --configuration Release --no-build --verbosity normal
+    
+    - name: Create NuGet package
+      run: dotnet pack src/Moq.EntityFrameworkCore/Moq.EntityFrameworkCore.csproj --configuration Release --no-build -p:PackageVersion=${{ env.VERSION }} --output ./artifacts
+    
+    - name: List package contents
+      run: |
+        echo "Created packages:"
+        ls -lh ./artifacts/
+    
+    - name: Push to NuGet.org
+      run: |
+        dotnet nuget push ./artifacts/*.nupkg \
+          --api-key ${{ secrets.NUGET_API_KEY }} \
+          --source https://api.nuget.org/v3/index.json \
+          --skip-duplicate
+    
+    - name: Upload release artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-package-${{ env.VERSION }}
+        path: ./artifacts/*.nupkg
+        retention-days: 365
+
+    - name: Summary
+      run: |
+        echo "### 🚀 Package Published Successfully!" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Version:** ${{ env.VERSION }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Package:** [Moq.EntityFrameworkCore](https://www.nuget.org/packages/Moq.EntityFrameworkCore/${{ env.VERSION }})" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "The package should be available on NuGet.org within a few minutes." >> $GITHUB_STEP_SUMMARY
