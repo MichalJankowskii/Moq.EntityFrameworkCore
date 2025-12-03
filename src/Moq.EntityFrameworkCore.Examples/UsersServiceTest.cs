@@ -10,7 +10,6 @@
     using System.Linq;
     using System.Threading;
     using Microsoft.EntityFrameworkCore;
-    using Moq.EntityFrameworkCore.Dynamic;
 
     public class UsersServiceTest
     {
@@ -173,8 +172,11 @@
             usersContextMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
-        [Fact]
-        public async Task Given_UsersWithGlobalFilter_When_GetAllUsersAsync_Then_OnlyFilteredUsersAreReturned()
+        public static TheoryData<CancellationToken> CancellationTokens = [CancellationToken.None, new CancellationToken(canceled: true)]; //Canceled: true because new CancellationToken() equals to default(CancellationToken) and equals to CancellationToken.None
+
+        [Theory]
+        [MemberData(nameof(CancellationTokens))]
+        public async Task Given_UsersWithGlobalFilter_When_GetAllUsersAsync_Then_OnlyFilteredUsersAreReturned(CancellationToken cancellationToken)
         {
             // Arrange
             var userJohn = new User { Id = 1, Name = "John" };
@@ -190,11 +192,33 @@
             var usersService = new UsersService(usersContextMock.Object);
 
             // Act
-            var result = await usersService.GetAllUsersAsync(CancellationToken.None); // should exclude userJack
+            var result = await usersService.GetAllUsersAsync(cancellationToken); // should exclude userJack
 
             // Assert
             Assert.Single(result);
             Assert.Equal(1, result.First().Id);
+        }
+
+        [Theory]
+        [MemberData(nameof(CancellationTokens))]
+        public async Task Given_ListOfUsers_When_GetAllUsersAsync_Then_AllUsersAreReturned(CancellationToken cancellationToken)
+        {
+            // Arrange
+            var userJohn = new User { Id = 1, Name = "John" };
+            var userJack = new User { Id = 3, Name = "Jack" };
+            var allUsers = new List<User> { userJohn, userJack };
+
+            var usersContextMock = new Mock<UsersContext>();
+            usersContextMock.Setup(x => x.Users)
+                .ReturnsDbSet(allUsers);
+
+            var usersService = new UsersService(usersContextMock.Object);
+
+            // Act
+            var result = await usersService.GetAllUsersAsync(cancellationToken);
+
+            // Assert
+            Assert.Equal(allUsers, result);
         }
 
         private static IList<User> GenerateNotLockedUsers()
