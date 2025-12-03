@@ -1,0 +1,9 @@
+<Project>
+  
+  <PropertyGroup>
+    <!-- Common build properties -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);CS1591</NoWarn> <!-- Missing XML comment for publicly visible type or member -->
+  </PropertyGroup>
+
+</Project>

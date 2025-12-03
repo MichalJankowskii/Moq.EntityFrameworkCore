@@ -39,3 +39,13 @@ Updated EntityFrameworkCore 8.0.1
 
 Version 9.0.0.1
 Updated EntityFrameworkCore 9.0.0
+
+Varsion 9.0.0.9
+update async enumerator mock to use It.IsAny<CancellationToken>()
+Added comprehensive NuGet package configuration
+Added SourceLink support for debugging
+Enhanced package metadata for better discoverability
+Added symbol package generation (.snupkg)
+Improved build configuration for CI/CD
+Added .editorconfig for consistent code formatting
+Added Directory.Build.props for shared build properties
