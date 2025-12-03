@@ -197,6 +197,26 @@
             Assert.Equal(1, result.First().Id);
         }
 
+        [Fact]
+        public async Task Given_ListOfUsers_When_ToListAsyncCalledWithCancellationToken_Then_AllUsersAreReturned()
+        {
+            // Arrange
+            IList<User> users = GenerateNotLockedUsers();
+
+            var userContextMock = new Mock<UsersContext>();
+            userContextMock.Setup(x => x.Users).ReturnsDbSet(users);
+
+            var usersService = new UsersService(userContextMock.Object);
+            var cancellationTokenSource = new CancellationTokenSource();
+
+            // Act - Using a real CancellationToken (not CancellationToken.None)
+            var result = await usersService.GetAllUsersAsync(cancellationTokenSource.Token);
+
+            // Assert
+            Assert.Equal(users.Count, result.Count);
+            Assert.Equal(users, result);
+        }
+
         private static IList<User> GenerateNotLockedUsers()
         {
             IList<User> users = new List<User>

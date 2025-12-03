@@ -46,7 +46,7 @@
             var entitiesAsQueryable = entities.AsQueryable();
 
             dbSetMock.As<IAsyncEnumerable<TEntity>>()
-               .Setup(m => m.GetAsyncEnumerator(CancellationToken.None))
+               .Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
                .Returns(() => new InMemoryDbAsyncEnumerator<TEntity>(entitiesAsQueryable.GetEnumerator()));
 
             dbSetMock.As<IQueryable<TEntity>>()
