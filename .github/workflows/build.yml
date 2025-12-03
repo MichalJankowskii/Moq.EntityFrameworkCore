@@ -119,6 +119,93 @@ jobs:
         retention-days: 30
         if-no-files-found: warn
 
+  summary:
+    name: Workflow Summary
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    if: always()
+    
+    steps:
+    - name: Download test results
+      uses: actions/download-artifact@v4
+      with:
+        name: test-results
+        path: ./TestResults
+      continue-on-error: true
+    
+    - name: Download coverage reports
+      uses: actions/download-artifact@v4
+      with:
+        name: coverage-reports
+        path: ./Coverage
+      continue-on-error: true
+    
+    - name: Install xmllint
+      run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+    
+    - name: Generate summary
+      run: |
+        echo "# Workflow Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Build information
+        echo "## 📦 Build Information" >> $GITHUB_STEP_SUMMARY
+        echo "- **Package Version**: ${{ needs.build.outputs.package_version }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Configuration**: ${{ env.BUILD_CONFIGURATION }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Target Framework**: .NET ${{ env.DOTNET_VERSION }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Entity Framework Version**: ${{ env.EF_VERSION }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Test results
+        echo "## 🧪 Test Results" >> $GITHUB_STEP_SUMMARY
+        if [ -f ./TestResults/test-results.trx ]; then
+          TOTAL_TESTS=$(xmllint --xpath "count(//UnitTestResult)" ./TestResults/test-results.trx 2>/dev/null || echo "0")
+          PASSED_TESTS=$(xmllint --xpath "count(//UnitTestResult[@outcome='Passed'])" ./TestResults/test-results.trx 2>/dev/null || echo "0")
+          FAILED_TESTS=$(xmllint --xpath "count(//UnitTestResult[@outcome='Failed'])" ./TestResults/test-results.trx 2>/dev/null || echo "0")
+          SKIPPED_TESTS=$(xmllint --xpath "count(//UnitTestResult[@outcome='NotExecuted'])" ./TestResults/test-results.trx 2>/dev/null || echo "0")
+          
+          echo "- **Total Tests**: $TOTAL_TESTS" >> $GITHUB_STEP_SUMMARY
+          echo "- **Passed**: ✅ $PASSED_TESTS" >> $GITHUB_STEP_SUMMARY
+          echo "- **Failed**: ❌ $FAILED_TESTS" >> $GITHUB_STEP_SUMMARY
+          echo "- **Skipped**: ⏭️ $SKIPPED_TESTS" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$FAILED_TESTS" -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **Some tests failed!**" >> $GITHUB_STEP_SUMMARY
+          fi
+        else
+          echo "- ⚠️ No test results found" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Coverage information
+        echo "## 📊 Code Coverage" >> $GITHUB_STEP_SUMMARY
+        if [ -f ./Coverage/coverage.cobertura.xml ]; then
+          LINE_RATE=$(xmllint --xpath "string(/coverage/@line-rate)" ./Coverage/coverage.cobertura.xml 2>/dev/null || echo "0")
+          BRANCH_RATE=$(xmllint --xpath "string(/coverage/@branch-rate)" ./Coverage/coverage.cobertura.xml 2>/dev/null || echo "0")
+          
+          LINE_COVERAGE=$(awk "BEGIN {printf \"%.2f\", $LINE_RATE * 100}")
+          BRANCH_COVERAGE=$(awk "BEGIN {printf \"%.2f\", $BRANCH_RATE * 100}")
+          
+          echo "- **Line Coverage**: ${LINE_COVERAGE}%" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch Coverage**: ${BRANCH_COVERAGE}%" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "- ⚠️ No coverage report found" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Job status
+        echo "## ✅ Job Status" >> $GITHUB_STEP_SUMMARY
+        echo "- **Build**: ${{ needs.build.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Test**: ${{ needs.test.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Artifacts
+        echo "## 📁 Artifacts" >> $GITHUB_STEP_SUMMARY
+        echo "- NuGet Package (90 days retention)" >> $GITHUB_STEP_SUMMARY
+        echo "- Test Results (30 days retention)" >> $GITHUB_STEP_SUMMARY
+        echo "- Coverage Reports (30 days retention)" >> $GITHUB_STEP_SUMMARY
+
   # Optional: Automatic publish to NuGet.org on master branch
   # Uncomment and configure NUGET_API_KEY secret to enable
   # publish:
