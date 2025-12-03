@@ -90,6 +90,9 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
     
+    - name: Restore dependencies
+      run: dotnet restore src/Moq.EntityFrameworkCore.sln
+    
     - name: Download build artifacts
       uses: actions/download-artifact@v4
       with:
@@ -97,14 +100,14 @@ jobs:
         path: src/
     
     - name: Run tests
-      run: dotnet test src/Moq.EntityFrameworkCore.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger "trx;LogFileName=test-results.trx"
+      run: dotnet test src/Moq.EntityFrameworkCore.sln --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --verbosity normal --collect:"XPlat Code Coverage" --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults
     
     - name: Upload test results
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: test-results
-        path: '**/TestResults/**/*.trx'
+        path: TestResults/**/*.trx
         retention-days: 30
     
     - name: Upload coverage reports
@@ -112,7 +115,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: coverage-reports
-        path: '**/TestResults/**/coverage.cobertura.xml'
+        path: TestResults/**/coverage.cobertura.xml
         retention-days: 30
         if-no-files-found: warn
 
