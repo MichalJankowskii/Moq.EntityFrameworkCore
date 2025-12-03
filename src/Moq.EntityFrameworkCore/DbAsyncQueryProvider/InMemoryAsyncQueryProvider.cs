@@ -27,7 +27,7 @@
 
         public object Execute(Expression expression)
         {
-            return this.innerQueryProvider.Execute(expression);
+            return this.innerQueryProvider.Execute(expression)!;
         }
 
         public TResult Execute<TResult>(Expression expression)
@@ -42,12 +42,12 @@
             var expectedResultType = typeof(TResult).GetGenericArguments()?.FirstOrDefault();
             if (expectedResultType == null)
             {
-                return default(TResult);
+                return default!;
             }
 
             return (TResult)typeof(Task).GetMethod(nameof(Task.FromResult))
                 ?.MakeGenericMethod(expectedResultType)
-                .Invoke(null, new[] { result });
+                .Invoke(null, new[] { result })!;
         }
 
 
