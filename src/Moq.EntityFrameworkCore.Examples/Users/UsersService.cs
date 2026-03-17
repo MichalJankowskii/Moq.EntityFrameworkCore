@@ -49,6 +49,11 @@
             return await this.usersContext.Set<User>().FirstOrDefaultAsync(predicate);
         }
 
+        public async Task<User> FindOneUserAsync(int id, CancellationToken cancellationToken)
+        {
+            return await this.usersContext.Set<User>().FindAsync(keyValues: [id], cancellationToken: cancellationToken);
+        }
+
         public async Task<IList<User>> GetAllUsersAsync(CancellationToken cancellationToken)
         {
             return await this.usersContext.Users.ToListAsync(cancellationToken);

@@ -11,13 +11,14 @@
         public static IReturnsResult<TContext> ReturnsDbSetWithGlobalFilter<TContext, TEntity>(
             this ISetup<TContext, DbSet<TEntity>> setup,
             IEnumerable<TEntity> entities,
-            Func<TEntity, bool> filter
+            Func<TEntity, bool> filter,
+            Func<TEntity, object>? findByKeyExpression = null
         )
             where TContext : DbContext
             where TEntity : class
         {
             var filtered = entities.Where(filter).ToList();
-            return setup.ReturnsDbSet(filtered);
+            return setup.ReturnsDbSet(filtered, findByKeyExpression: findByKeyExpression);
         }
     }
 }

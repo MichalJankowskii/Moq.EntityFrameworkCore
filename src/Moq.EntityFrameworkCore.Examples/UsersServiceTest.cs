@@ -221,6 +221,31 @@
             Assert.Equal(allUsers, result);
         }
 
+        [Theory]
+        [MemberData(nameof(CancellationTokens))]
+        public async Task Given_ListOfUsers_When_FindOneUserAsync_Then_ThatUserIsReturned(CancellationToken cancellationToken)
+        {
+            // Arrange
+            var users = new List<User>
+            {
+                Fixture.Build<User>().Create(),
+                Fixture.Build<User>().Create(),
+                Fixture.Build<User>().Create()
+            };
+            var usersContextMock = new Mock<UsersContext>();
+            usersContextMock
+                .Setup(x => x.Set<User>())
+                .ReturnsDbSet(users, findByKeyExpression: u => u.Id); //findByKeyExpression is necessary to mock FindAsync
+
+            var usersService = new UsersService(usersContextMock.Object);
+
+            // Act
+            var result = await usersService.FindOneUserAsync(users[0].Id, cancellationToken);
+
+            // Assert
+            Assert.Equal(users[0], result);
+        }
+
         private static IList<User> GenerateNotLockedUsers()
         {
             IList<User> users = new List<User>
