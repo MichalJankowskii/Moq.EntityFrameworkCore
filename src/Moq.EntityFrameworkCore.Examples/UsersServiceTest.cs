@@ -235,7 +235,7 @@
             var usersContextMock = new Mock<UsersContext>();
             usersContextMock
                 .Setup(x => x.Set<User>())
-                .ReturnsDbSet(users, findByKeyExpression: u => u.Id); //findByKeyExpression is necessary to mock FindAsync
+                .ReturnsDbSet(users, findByKeyExpression: u => [u.Id]); //findByKeyExpression is necessary to mock FindAsync
 
             var usersService = new UsersService(usersContextMock.Object);
 

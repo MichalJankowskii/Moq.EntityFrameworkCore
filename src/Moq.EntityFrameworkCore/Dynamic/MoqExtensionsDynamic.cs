@@ -12,7 +12,7 @@
 
     public static class MoqExtensionsDynamic
     {
-        public static IReturnsResult<T> ReturnsDbSetDynamic<T, TEntity>(this ISetupGetter<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>>? dbSetMock = null, Func<TEntity, object>? findByKeyExpression = null) where T : class where TEntity : class
+        public static IReturnsResult<T> ReturnsDbSetDynamic<T, TEntity>(this ISetupGetter<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>>? dbSetMock = null, Func<TEntity, object[]>? findByKeyExpression = null) where T : class where TEntity : class
         {
             dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
 
@@ -21,7 +21,7 @@
             return setupResult.Returns(() => dbSetMock.Object);
         }
 
-        public static IReturnsResult<T> ReturnsDbSetDynamic<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>>? dbSetMock = null, Func<TEntity, object>? findByKeyExpression = null) where T : class where TEntity : class
+        public static IReturnsResult<T> ReturnsDbSetDynamic<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>>? dbSetMock = null, Func<TEntity, object[]>? findByKeyExpression = null) where T : class where TEntity : class
         {
             dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
 
@@ -30,7 +30,7 @@
             return setupResult.Returns(() => dbSetMock.Object);
         }
 
-        public static ISetupSequentialResult<DbSet<TEntity>> ReturnsDbSetDynamic<TEntity>(this ISetupSequentialResult<DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>>? dbSetMock = null, Func<TEntity, object>? findByKeyExpression = null) where TEntity : class
+        public static ISetupSequentialResult<DbSet<TEntity>> ReturnsDbSetDynamic<TEntity>(this ISetupSequentialResult<DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>>? dbSetMock = null, Func<TEntity, object[]>? findByKeyExpression = null) where TEntity : class
         {
             dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
 
@@ -42,7 +42,7 @@
         /// <summary>
         /// Configures a Mock for a <see cref="DbSet{TEntity}"/> so that it can be queriable via LINQ
         /// </summary>
-        public static void ConfigureMockDynamic<TEntity>(Mock dbSetMock, IEnumerable<TEntity> entities, Func<TEntity, object>? findByKeyExpression = null) where TEntity : class
+        public static void ConfigureMockDynamic<TEntity>(Mock dbSetMock, IEnumerable<TEntity> entities, Func<TEntity, object[]>? findByKeyExpression = null) where TEntity : class
         {
             var entitiesAsQueryable = entities.AsQueryable();
 
@@ -58,16 +58,19 @@
             dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(entitiesAsQueryable.ElementType);
             dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(() => entitiesAsQueryable.GetEnumerator());
 
-            if (findByKeyExpression != null)
+            if (findByKeyExpression is not null)
             {
-                var typedMock = (Mock<DbSet<TEntity>>)dbSetMock;
+                if (dbSetMock is not Mock<DbSet<TEntity>> typedMock)
+                {
+                    throw new ArgumentException($"dbSetMock must be a Mock<DbSet<{typeof(TEntity).Name}>> when findByKeyExpression is provided.", nameof(dbSetMock));
+                }
 
                 typedMock
                     .Setup(m => m.FindAsync(It.IsAny<object?[]?>()))
                     .Returns<object?[]?>(keyValues =>
                     {
                         if (keyValues == null || keyValues.Length == 0) return ValueTask.FromResult<TEntity?>(default);
-                        return ValueTask.FromResult(entities.FirstOrDefault(e => Equals(findByKeyExpression(e), keyValues[0])));
+                        return ValueTask.FromResult(entities.FirstOrDefault(e => findByKeyExpression(e).SequenceEqual(keyValues!)));
                     });
 
                 typedMock
@@ -75,7 +78,7 @@
                     .Returns<object?[]?, CancellationToken>((keyValues, _) =>
                     {
                         if (keyValues == null || keyValues.Length == 0) return ValueTask.FromResult<TEntity?>(default);
-                        return ValueTask.FromResult(entities.FirstOrDefault(e => Equals(findByKeyExpression(e), keyValues[0])));
+                        return ValueTask.FromResult(entities.FirstOrDefault(e => findByKeyExpression(e).SequenceEqual(keyValues!)));
                     });
             }
         }

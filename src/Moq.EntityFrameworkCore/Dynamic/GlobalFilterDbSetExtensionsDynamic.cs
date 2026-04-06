@@ -12,7 +12,7 @@
             this ISetup<TContext, DbSet<TEntity>> setup,
             IEnumerable<TEntity> entities,
             Func<TEntity, bool> filter,
-            Func<TEntity, object>? findByKeyExpression = null
+            Func<TEntity, object[]>? findByKeyExpression = null
         )
             where TContext : DbContext
             where TEntity : class
