@@ -1,6 +1,5 @@
 namespace Moq.EntityFrameworkCore.Tests
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
@@ -96,34 +95,6 @@ namespace Moq.EntityFrameworkCore.Tests
         }
 
         [Fact]
-        public void ConfigureMock_WithWrongMockType_ThrowsArgumentException()
-        {
-            // Arrange
-            var wrongMock = new Mock<DbSet<TestEntityForWrongMockType>>();
-
-            // Act
-            var act = () => MoqExtensions.ConfigureMock(wrongMock, new List<TestEntitySimpleKey>(), findByKeyExpression: e => [e.Id]);
-
-            // Assert
-            var ex = Assert.Throws<ArgumentException>(act);
-            Assert.Equal("dbSetMock", ex.ParamName);
-        }
-
-        [Fact]
-        public void ConfigureMockDynamic_WithWrongMockType_ThrowsArgumentException()
-        {
-            // Arrange
-            var wrongMock = new Mock<DbSet<TestEntityForWrongMockType>>();
-
-            // Act
-            var act = () => MoqExtensionsDynamic.ConfigureMockDynamic(wrongMock, new List<TestEntitySimpleKey>(), findByKeyExpression: e => [e.Id]);
-
-            // Assert
-            var ex = Assert.Throws<ArgumentException>(act);
-            Assert.Equal("dbSetMock", ex.ParamName);
-        }
-
-        [Fact]
         public async Task FindAsync_WithCompositeKey_ReturnsCorrectEntity()
         {
             // Arrange
@@ -188,6 +159,71 @@ namespace Moq.EntityFrameworkCore.Tests
             Assert.Null(result);
         }
 
+        [Fact]
+        public async Task FindAsync_Dynamic_WithMatchingKey_ReturnsCorrectEntity()
+        {
+            // Arrange
+            var entities = new List<TestEntitySimpleKey>
+            {
+                new() { Id = 1, Name = "Alice" },
+                new() { Id = 2, Name = "Bob" }
+            };
+
+            var dbSetMock = new Mock<DbSet<TestEntitySimpleKey>>();
+            MoqExtensionsDynamic.ConfigureMockDynamic(dbSetMock, entities, findByKeyExpression: e => [e.Id]);
+
+            // Act
+            var result = await dbSetMock.Object.FindAsync(2);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal("Bob", result.Name);
+        }
+
+        [Fact]
+        public async Task FindAsync_Dynamic_WithCancellationToken_ReturnsCorrectEntity()
+        {
+            // Arrange
+            var entities = new List<TestEntitySimpleKey>
+            {
+                new() { Id = 1, Name = "Alice" },
+                new() { Id = 2, Name = "Bob" }
+            };
+
+            var dbSetMock = new Mock<DbSet<TestEntitySimpleKey>>();
+            MoqExtensionsDynamic.ConfigureMockDynamic(dbSetMock, entities, findByKeyExpression: e => [e.Id]);
+
+            using var cts = new CancellationTokenSource();
+
+            // Act
+            var result = await dbSetMock.Object.FindAsync([1], cts.Token);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal("Alice", result.Name);
+        }
+
+        [Fact]
+        public async Task FindAsync_Dynamic_WithCompositeKey_ReturnsCorrectEntity()
+        {
+            // Arrange
+            var entities = new List<TestEntityCompositeKey>
+            {
+                new() { CountryCode = "ES", CityId = 1, Name = "Madrid" },
+                new() { CountryCode = "FR", CityId = 1, Name = "Paris" }
+            };
+
+            var dbSetMock = new Mock<DbSet<TestEntityCompositeKey>>();
+            MoqExtensionsDynamic.ConfigureMockDynamic(dbSetMock, entities, findByKeyExpression: e => [e.CountryCode, e.CityId]);
+
+            // Act
+            var result = await dbSetMock.Object.FindAsync("ES", 1);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal("Madrid", result.Name);
+        }
+
         public class TestEntitySimpleKey
         {
             public int Id { get; set; }
@@ -199,11 +235,6 @@ namespace Moq.EntityFrameworkCore.Tests
             public string CountryCode { get; set; } = string.Empty;
             public int CityId { get; set; }
             public string Name { get; set; } = string.Empty;
-        }
-
-        public class TestEntityForWrongMockType
-        {
-            public int Id { get; set; }
         }
     }
 }
