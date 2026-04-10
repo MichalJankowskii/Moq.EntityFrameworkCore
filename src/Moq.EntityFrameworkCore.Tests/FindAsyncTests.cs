@@ -160,6 +160,25 @@ namespace Moq.EntityFrameworkCore.Tests
         }
 
         [Fact]
+        public async Task FindAsync_Dynamic_WithoutFindByKeyExpression_ReturnsDefault()
+        {
+            // Arrange
+            var entities = new List<TestEntitySimpleKey>
+            {
+                new() { Id = 1, Name = "Alice" }
+            };
+
+            var dbSetMock = new Mock<DbSet<TestEntitySimpleKey>>();
+            MoqExtensionsDynamic.ConfigureMockDynamic(dbSetMock, entities); // no findByKeyExpression
+
+            // Act
+            var result = await dbSetMock.Object.FindAsync(1);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
         public async Task FindAsync_Dynamic_WithMatchingKey_ReturnsCorrectEntity()
         {
             // Arrange
@@ -222,6 +241,45 @@ namespace Moq.EntityFrameworkCore.Tests
             // Assert
             Assert.NotNull(result);
             Assert.Equal("Madrid", result.Name);
+        }
+
+        [Fact]
+        public async Task FindAsync_Dynamic_WithCompositeKey_KeyValuesInWrongOrder_ReturnsNull()
+        {
+            // Arrange
+            var entities = new List<TestEntityCompositeKey>
+            {
+                new() { CountryCode = "FR", CityId = 1, Name = "Paris" }
+            };
+
+            var dbSetMock = new Mock<DbSet<TestEntityCompositeKey>>();
+            MoqExtensionsDynamic.ConfigureMockDynamic(dbSetMock, entities, findByKeyExpression: e => [e.CountryCode, e.CityId]);
+
+            // Act
+            var result = await dbSetMock.Object.FindAsync(1, "FR");
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task FindAsync_Dynamic_WithCompositeKey_DoesNotMatchPartialKey()
+        {
+            // Arrange
+            var entities = new List<TestEntityCompositeKey>
+            {
+                new() { CountryCode = "ES", CityId = 1, Name = "Madrid" },
+                new() { CountryCode = "FR", CityId = 1, Name = "Paris" }
+            };
+
+            var dbSetMock = new Mock<DbSet<TestEntityCompositeKey>>();
+            MoqExtensionsDynamic.ConfigureMockDynamic(dbSetMock, entities, findByKeyExpression: e => [e.CountryCode, e.CityId]);
+
+            // Act
+            var result = await dbSetMock.Object.FindAsync("DE", 1);
+
+            // Assert
+            Assert.Null(result);
         }
 
         public class TestEntitySimpleKey
