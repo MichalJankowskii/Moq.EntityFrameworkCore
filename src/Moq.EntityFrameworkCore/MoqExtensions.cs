@@ -1,4 +1,4 @@
-﻿namespace Moq.EntityFrameworkCore
+namespace Moq.EntityFrameworkCore
 {
     using System;
     using System.Collections.Generic;
@@ -12,27 +12,54 @@
 
     public static class MoqExtensions
     {
-        public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetupGetter<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>>? dbSetMock = null, Func<TEntity, object[]>? findByKeyExpression = null) where T : class where TEntity : class
+        public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetupGetter<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>>? dbSetMock = null) where T : class where TEntity : class
         {
-            dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
+            dbSetMock ??= new Mock<DbSet<TEntity>>();
+
+            ConfigureMock(dbSetMock, entities);
+
+            return setupResult.Returns(dbSetMock.Object);
+        }
+
+        public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetupGetter<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Func<TEntity, object[]> findByKeyExpression, Mock<DbSet<TEntity>>? dbSetMock = null) where T : class where TEntity : class
+        {
+            dbSetMock ??= new Mock<DbSet<TEntity>>();
 
             ConfigureMock(dbSetMock, entities, findByKeyExpression);
 
             return setupResult.Returns(dbSetMock.Object);
         }
 
-        public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>>? dbSetMock = null, Func<TEntity, object[]>? findByKeyExpression = null) where T : class where TEntity : class
+        public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>>? dbSetMock = null) where T : class where TEntity : class
         {
-            dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
+            dbSetMock ??= new Mock<DbSet<TEntity>>();
+
+            ConfigureMock(dbSetMock, entities);
+
+            return setupResult.Returns(dbSetMock.Object);
+        }
+
+        public static IReturnsResult<T> ReturnsDbSet<T, TEntity>(this ISetup<T, DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Func<TEntity, object[]> findByKeyExpression, Mock<DbSet<TEntity>>? dbSetMock = null) where T : class where TEntity : class
+        {
+            dbSetMock ??= new Mock<DbSet<TEntity>>();
 
             ConfigureMock(dbSetMock, entities, findByKeyExpression);
 
             return setupResult.Returns(dbSetMock.Object);
         }
 
-        public static ISetupSequentialResult<DbSet<TEntity>> ReturnsDbSet<TEntity>(this ISetupSequentialResult<DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>>? dbSetMock = null, Func<TEntity, object[]>? findByKeyExpression = null) where TEntity : class
+        public static ISetupSequentialResult<DbSet<TEntity>> ReturnsDbSet<TEntity>(this ISetupSequentialResult<DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Mock<DbSet<TEntity>>? dbSetMock = null) where TEntity : class
         {
-            dbSetMock = dbSetMock ?? new Mock<DbSet<TEntity>>();
+            dbSetMock ??= new Mock<DbSet<TEntity>>();
+
+            ConfigureMock(dbSetMock, entities);
+
+            return setupResult.Returns(dbSetMock.Object);
+        }
+
+        public static ISetupSequentialResult<DbSet<TEntity>> ReturnsDbSet<TEntity>(this ISetupSequentialResult<DbSet<TEntity>> setupResult, IEnumerable<TEntity> entities, Func<TEntity, object[]> findByKeyExpression, Mock<DbSet<TEntity>>? dbSetMock = null) where TEntity : class
+        {
+            dbSetMock ??= new Mock<DbSet<TEntity>>();
 
             ConfigureMock(dbSetMock, entities, findByKeyExpression);
 
@@ -62,11 +89,9 @@
         /// <summary>
         /// Configures a Mock for a <see cref="DbSet{TEntity}"/> so that it can be queryable via LINQ
         /// </summary>
-        public static void ConfigureMock<TEntity>(Mock<DbSet<TEntity>> dbSetMock, IEnumerable<TEntity> entities, Func<TEntity, object[]>? findByKeyExpression = null) where TEntity : class
+        public static void ConfigureMock<TEntity>(Mock<DbSet<TEntity>> dbSetMock, IEnumerable<TEntity> entities, Func<TEntity, object[]> findByKeyExpression) where TEntity : class
         {
             ConfigureMock((Mock)dbSetMock, entities);
-
-            if (findByKeyExpression is null) return;
 
             dbSetMock
                 .Setup(m => m.FindAsync(It.IsAny<object?[]?>()))
