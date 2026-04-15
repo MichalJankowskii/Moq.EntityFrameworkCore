@@ -1,5 +1,6 @@
 namespace Moq.EntityFrameworkCore.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
@@ -156,6 +157,33 @@ namespace Moq.EntityFrameworkCore.Tests
             var result = await dbSetMock.Object.FindAsync("DE", 1);
 
             // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void ConfigureMock_NullFindByKeyExpression_ThrowsArgumentNullException()
+        {
+            var dbSetMock = new Mock<DbSet<TestEntitySimpleKey>>();
+            Assert.Throws<ArgumentNullException>(() =>
+                MoqExtensions.ConfigureMock(dbSetMock, new List<TestEntitySimpleKey>(), findByKeyExpression: null!));
+        }
+
+        [Fact]
+        public void ConfigureMockDynamic_NullFindByKeyExpression_ThrowsArgumentNullException()
+        {
+            var dbSetMock = new Mock<DbSet<TestEntitySimpleKey>>();
+            Assert.Throws<ArgumentNullException>(() =>
+                MoqExtensionsDynamic.ConfigureMockDynamic(dbSetMock, new List<TestEntitySimpleKey>(), findByKeyExpression: null!));
+        }
+
+        [Fact]
+        public async Task FindAsync_EmptyCollection_ReturnsNull()
+        {
+            var dbSetMock = new Mock<DbSet<TestEntitySimpleKey>>();
+            MoqExtensions.ConfigureMock(dbSetMock, new List<TestEntitySimpleKey>(), findByKeyExpression: e => [e.Id]);
+
+            var result = await dbSetMock.Object.FindAsync(1);
+
             Assert.Null(result);
         }
 
