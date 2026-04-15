@@ -1,4 +1,5 @@
-﻿namespace Moq.EntityFrameworkCore.Examples.Users
+﻿#nullable enable
+namespace Moq.EntityFrameworkCore.Examples.Users
 {
     using Microsoft.EntityFrameworkCore;
     using Moq.EntityFrameworkCore.Examples.Users.Entities;
@@ -44,9 +45,14 @@
             return await this.usersContext.Roles.Where(x => !x.IsEnabled).ToListAsync();
         }
 
-        public async Task<User> FindOneUserAsync(Expression<Func<User, bool>> predicate)
+        public async Task<User?> FindOneUserAsync(Expression<Func<User, bool>> predicate)
         {
             return await this.usersContext.Set<User>().FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task<User?> FindOneUserAsync(int id, CancellationToken cancellationToken)
+        {
+            return await this.usersContext.Set<User>().FindAsync(keyValues: [id], cancellationToken: cancellationToken);
         }
 
         public async Task<IList<User>> GetAllUsersAsync(CancellationToken cancellationToken)

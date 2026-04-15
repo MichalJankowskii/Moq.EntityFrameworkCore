@@ -1,4 +1,4 @@
-﻿namespace Moq.EntityFrameworkCore
+namespace Moq.EntityFrameworkCore
 {
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -18,6 +18,19 @@
         {
             var filtered = entities.Where(filter).ToList();
             return setup.ReturnsDbSet(filtered);
+        }
+
+        public static IReturnsResult<TContext> ReturnsDbSetWithGlobalFilter<TContext, TEntity>(
+            this ISetup<TContext, DbSet<TEntity>> setup,
+            IEnumerable<TEntity> entities,
+            Func<TEntity, bool> filter,
+            Func<TEntity, object?[]> findByKeyExpression
+        )
+            where TContext : DbContext
+            where TEntity : class
+        {
+            var filtered = entities.Where(filter).ToList();
+            return setup.ReturnsDbSet(filtered, findByKeyExpression);
         }
     }
 }
