@@ -81,3 +81,18 @@ userContextMock.Setup(x => x.Users).ReturnsDbSetDynamic(users);
 - `ReturnsDbSetDynamic`: Dynamically resolves the DbSet value using a lambda, ensuring it reflects changes at runtime.
 
 You will find examples of this library in the [repository](https://github.com/MichalJankowskii/Moq.EntityFrameworkCore/blob/master/src/Moq.EntityFrameworkCore.Examples/UsersServiceTest.cs).
+
+## Mocking Database Transactions
+
+To mock `Database.BeginTransactionAsync()` (or `BeginTransaction()`), use the `SetupBeginTransaction` extension method:
+
+```csharp
+var usersContextMock = new Mock<UsersContext>();
+var transactionMock = usersContextMock.SetupBeginTransaction();
+```
+
+This sets up the `Database` property on the context mock and configures both `BeginTransaction()` and `BeginTransactionAsync()` to return a mock `IDbContextTransaction`. You can then verify calls on the transaction:
+
+```csharp
+transactionMock.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+```

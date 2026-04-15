@@ -6,6 +6,8 @@ namespace Moq.EntityFrameworkCore
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Infrastructure;
+    using Microsoft.EntityFrameworkCore.Storage;
     using Moq.EntityFrameworkCore.DbAsyncQueryProvider;
     using Moq.Language;
     using Moq.Language.Flow;
@@ -84,6 +86,25 @@ namespace Moq.EntityFrameworkCore
             dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.Expression).Returns(entitiesAsQueryable.Expression);
             dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.ElementType).Returns(entitiesAsQueryable.ElementType);
             dbSetMock.As<IQueryable<TEntity>>().Setup(m => m.GetEnumerator()).Returns(() => entitiesAsQueryable.GetEnumerator());
+        }
+
+        /// <summary>
+        /// Sets up a <see cref="Mock{T}"/> of a <see cref="DbContext"/> so that <see cref="DatabaseFacade.BeginTransaction"/>
+        /// and <see cref="DatabaseFacade.BeginTransactionAsync(CancellationToken)"/> return a mock transaction.
+        /// </summary>
+        /// <typeparam name="T">The <see cref="DbContext"/> type.</typeparam>
+        /// <param name="dbContextMock">The mock to configure.</param>
+        /// <returns>The <see cref="Mock{IDbContextTransaction}"/> that will be returned by both BeginTransaction and BeginTransactionAsync.</returns>
+        public static Mock<IDbContextTransaction> SetupBeginTransaction<T>(this Mock<T> dbContextMock) where T : DbContext
+        {
+            var databaseMock = new Mock<DatabaseFacade>(dbContextMock.Object);
+            dbContextMock.Setup(x => x.Database).Returns(databaseMock.Object);
+
+            var transactionMock = new Mock<IDbContextTransaction>();
+            databaseMock.Setup(db => db.BeginTransaction()).Returns(transactionMock.Object);
+            databaseMock.Setup(db => db.BeginTransactionAsync(It.IsAny<CancellationToken>())).ReturnsAsync(transactionMock.Object);
+
+            return transactionMock;
         }
 
         /// <summary>

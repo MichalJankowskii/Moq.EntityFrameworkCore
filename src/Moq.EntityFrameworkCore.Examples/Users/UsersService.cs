@@ -25,6 +25,14 @@ namespace Moq.EntityFrameworkCore.Examples.Users
             await this.usersContext.SaveChangesAsync();
         }
 
+        public async Task AddUserWithTransaction(User user)
+        {
+            await using var transaction = await this.usersContext.Database.BeginTransactionAsync();
+            await this.usersContext.Users.AddAsync(user);
+            await this.usersContext.SaveChangesAsync();
+            await transaction.CommitAsync();
+        }
+
         public IList<User> GetLockedUsers()
         {
             return this.usersContext.Users.Where(x => x.AccountLocked).ToList();

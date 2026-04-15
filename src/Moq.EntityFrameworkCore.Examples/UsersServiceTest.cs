@@ -172,6 +172,26 @@
             usersContextMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
+        [Fact]
+        public async Task Given_ListOfUser_When_AddingUserWithTransaction_Then_CorrectMethodsExecuted()
+        {
+            // Arrange
+            var user = Fixture.Build<User>().Create();
+            var usersDb = new Mock<DbSet<User>>();
+            var usersContextMock = new Mock<UsersContext>();
+            usersContextMock.Setup(x => x.Users).Returns(usersDb.Object);
+            var transactionMock = usersContextMock.SetupBeginTransaction();
+            var usersService = new UsersService(usersContextMock.Object);
+
+            // Act
+            await usersService.AddUserWithTransaction(user);
+
+            // Assert
+            usersDb.Verify(x => x.AddAsync(It.Is<User>(y => y == user), CancellationToken.None), Times.Once);
+            usersContextMock.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+            transactionMock.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+        }
+
         public static TheoryData<CancellationToken> CancellationTokens = [CancellationToken.None, new CancellationToken(canceled: true)]; //Canceled: true because new CancellationToken() equals to default(CancellationToken) and equals to CancellationToken.None
 
         [Theory]
