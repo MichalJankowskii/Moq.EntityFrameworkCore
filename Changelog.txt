@@ -53,3 +53,7 @@ Added Directory.Build.props for shared build properties
 Version 10.0.0.0
 Updated to .NET 10.0
 Updated to Entity Framework Core 10.0
+
+Version 11.0.0.0
+Updated to .NET 11.0
+Updated to Entity Framework Core 11.0
