@@ -69,6 +69,17 @@ var userContextMock = new Mock<UsersContext>();
 userContextMock.Setup(x => x.Users).ReturnsDbSetWithGlobalFilter(users, u => u.IsActive);
 ```
 
+It also works with a mocked interface exposing `Set<TEntity>()`:
+```csharp
+public interface IUserContext
+{
+    DbSet<T> Set<T>() where T : class;
+}
+
+var contextMock = new Mock<IUserContext>();
+contextMock.Setup(x => x.Set<User>()).ReturnsDbSetWithGlobalFilter(users, u => u.IsActive);
+```
+
 ## New Usage Option: ReturnsDbSetDynamic
 You can now use the ReturnsDbSetDynamic method for scenarios where you need lazy evaluation of your DbSet. This ensures that the DbSet is re-evaluated dynamically at runtime.
 
