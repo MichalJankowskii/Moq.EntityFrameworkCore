@@ -13,7 +13,7 @@ namespace Moq.EntityFrameworkCore
             IEnumerable<TEntity> entities,
             Func<TEntity, bool> filter
         )
-            where TContext : DbContext
+            where TContext : class
             where TEntity : class
         {
             var filtered = entities.Where(filter).ToList();
@@ -26,7 +26,7 @@ namespace Moq.EntityFrameworkCore
             Func<TEntity, bool> filter,
             Func<TEntity, object?[]> findByKeyExpression
         )
-            where TContext : DbContext
+            where TContext : class
             where TEntity : class
         {
             var filtered = entities.Where(filter).ToList();
